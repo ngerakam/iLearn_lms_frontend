@@ -50,8 +50,9 @@ const routes = [
     component: AuthorView,
   },
   {
-    path: "/dashboard//dashboard/home",
+    path: "/dashboard/home",
     name: "DashHome",
+    // component: MyAccountView,
     component: DashHome,
   },
   {

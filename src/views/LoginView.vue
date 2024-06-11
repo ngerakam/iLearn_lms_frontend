@@ -9,6 +9,13 @@
       <div class="container">
         <div class="colums">
           <div class="column is-4 is-offset-4">
+            <figure class="image is-128x128 ml-auto mr-auto">
+              <img
+                src="https://bulma.io/assets/images/placeholders/128x128.png"
+              />
+            </figure>
+          </div>
+          <div class="column is-4 is-offset-4">
             <form v-on:submit.prevent="submitForm">
               <div class="field">
                 <label for="">Email</label>

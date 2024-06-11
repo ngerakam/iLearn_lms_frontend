@@ -6,7 +6,12 @@
     style="min-height: 5rem"
   >
     <div class="navbar-brand">
-      <a href="/" class="navbar-item is-size-4">iLearn LMS</a>
+      <template v-if="$store.state.user.isAuthenticated">
+        <a href="/dashboard/home" class="navbar-item is-size-4">iLearn LMS</a>
+      </template>
+      <template v-else>
+        <a href="/" class="navbar-item is-size-4">iLearn LMS</a>
+      </template>
     </div>
     <div class="navbar-menu" id="navbar-item">
       <div class="navbar-start">
@@ -66,7 +71,8 @@ export default {
 
       axios.defaults.headers.common["Authorization"] = "";
 
-      localStorage.removeItem("token");
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
 
       this.$store.commit("removeToken");
 

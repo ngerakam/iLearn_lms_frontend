@@ -49,32 +49,48 @@
                   </div>
                   <div v-else>
                     <!-- Start Learning Button -->
-                    <div v-if="startedValue === null" class="column is-12">
+                    <div
+                      v-if="
+                        startedValue === null &&
+                        !courseActivity &&
+                        (!courseActivity?.course_status ||
+                          courseActivity?.course_status?.status !== 'done')
+                      "
+                      class="column is-12"
+                    >
                       <button class="button is-primary" @click="startLearning">
                         Start Learning
                       </button>
                     </div>
-                    <div v-if="courseActivity && activeLesson === null">
-                      <div
-                        class="column is-12"
-                        v-if="courseActivity.course_status.status === 'done'"
-                      >
-                        <router-link class="button is-primary" to="/courses">
-                          Completed
-                        </router-link>
-                      </div>
-                      <div
-                        class="column is-12"
-                        v-else-if="
-                          courseActivity.course_status.status === 'started'
-                        "
-                      >
-                        <button
-                          class="button is-primary"
-                          @click="continueLearning"
+                    <div v-else>
+                      <div v-if="activeLesson === null">
+                        <div
+                          class="column is-12"
+                          v-if="
+                            courseActivity &&
+                            courseActivity?.course_status &&
+                            courseActivity?.course_status?.status === 'done'
+                          "
                         >
-                          Continue
-                        </button>
+                          <router-link class="button is-primary" to="/courses">
+                            Completed
+                          </router-link>
+                        </div>
+                        <div
+                          class="column is-12"
+                          v-else-if="
+                            courseActivity &&
+                            courseActivity?.course_status &&
+                            courseActivity?.course_status?.status === 'started'
+                          "
+                        >
+                          <button
+                            class="button is-primary"
+                            @click="continueLearning"
+                          >
+                            Continue
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -181,6 +197,40 @@
                     <MyCustomDoc :fileUrl="activeLesson.get_file" />
                   </div>
                   <div v-if="getFileType(activeLesson.get_file) === 'pptx'">
+                    <div class="columns">
+                      <div class="column"></div>
+                      <div class="column"></div>
+                      <div class="column">
+                        <!-- Finish Course Button -->
+                        <div
+                          v-if="activeLesson && isLastLesson"
+                          class="column is-12 mt-5"
+                        >
+                          <template
+                            v-if="
+                              courseActivity &&
+                              courseActivity.course_status &&
+                              courseActivity.course_status.status === 'done'
+                            "
+                          >
+                            <router-link
+                              class="button is-primary"
+                              to="/courses"
+                            >
+                              Completed
+                            </router-link>
+                          </template>
+                          <template v-else>
+                            <button
+                              class="button is-primary"
+                              @click="finishCourse"
+                            >
+                              Finish Course
+                            </button>
+                          </template>
+                        </div>
+                      </div>
+                    </div>
                     <MyCustomPptViewer :fileUrl="activeLesson.get_file" />
                   </div>
                   <div v-if="getFileType(activeLesson.get_file) === 'pdf'">
@@ -201,14 +251,22 @@
                   </nav>
                 </div>
               </template>
+
               <div class="columns">
                 <div class="column"></div>
                 <div class="column"></div>
                 <div class="column">
                   <!-- Finish Course Button -->
-                  <div v-if="activeLesson && isLastLesson" class="column is-12">
+                  <div
+                    v-if="activeLesson && isLastLesson"
+                    class="column is-12 mt-5"
+                  >
                     <template
-                      v-if="courseActivity.course_status.status === 'done'"
+                      v-if="
+                        courseActivity &&
+                        courseActivity.course_status &&
+                        courseActivity.course_status.status === 'done'
+                      "
                     >
                       <router-link class="button is-primary" to="/courses">
                         Completed
@@ -527,6 +585,16 @@ export default {
         .get(`activities/verify_started_course/${this.course.slug}`)
         .then((response) => {
           this.startedValue = response.data.status === 200 ? "started" : null;
+
+          if (this.startedValue === null) {
+            this.courseActivity = {
+              course_status: {
+                status: "",
+              },
+            };
+          } else {
+            this.courseActivity = response.data;
+          }
           this.courseActivity = response.data;
           console.log(this.courseActivity);
         })
