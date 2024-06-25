@@ -2,9 +2,8 @@
   <div class="home">
     <div class="hero is-info is-medium">
       <div class="hero-body has-text-centered">
-        <h1 class="title">Welcome to iLearn LMS</h1>
-
-        <h2 class="subtitle">An E-learning platform for gaining knowledge.</h2>
+        <h1 class="title">{{ siteSetup.hero_name }}</h1>
+        <h2 class="subtitle">{{ siteSetup.hero_message }}</h2>
       </div>
     </div>
     <section class="section">
@@ -15,14 +14,8 @@
               <span class="icon is-size-2 has-text-in">
                 <i class="far fa-clock"></i>
               </span>
-              <h2 class="is-size-4 mt-4 mb-4">Self-paced studying</h2>
-
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                deserunt ipsam deleniti, eius provident libero aspernatur aut
-                maxime nulla veniam rerum pariatur inventore, repudiandae
-                mollitia natus beatae ducimus doloribus eligendi!
-              </p>
+              <h2 class="is-size-4 mt-4 mb-4">{{ siteSetup.card1_name }}</h2>
+              <p>{{ siteSetup.card1 }}</p>
             </div>
           </div>
           <div class="column is-4">
@@ -30,14 +23,8 @@
               <span class="icon is-size-2 has-text-in">
                 <i class="far fa-comments"></i>
               </span>
-              <h2 class="is-size-4 mt-4 mb-4">Group studying</h2>
-
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                deserunt ipsam deleniti, eius provident libero aspernatur aut
-                maxime nulla veniam rerum pariatur inventore, repudiandae
-                mollitia natus beatae ducimus doloribus eligendi!
-              </p>
+              <h2 class="is-size-4 mt-4 mb-4">{{ siteSetup.card2_name }}</h2>
+              <p>{{ siteSetup.card2 }}</p>
             </div>
           </div>
           <div class="column is-4">
@@ -45,20 +32,14 @@
               <span class="icon is-size-2 has-text-in">
                 <i class="fas fa-home"></i>
               </span>
-              <h2 class="is-size-4 mt-4 mb-4">Study Anywhere</h2>
-
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                deserunt ipsam deleniti, eius provident libero aspernatur aut
-                maxime nulla veniam rerum pariatur inventore, repudiandae
-                mollitia natus beatae ducimus doloribus eligendi!
-              </p>
+              <h2 class="is-size-4 mt-4 mb-4">{{ siteSetup.card3_name }}</h2>
+              <p>{{ siteSetup.card3 }}</p>
             </div>
           </div>
           <template v-if="!$store.state.user.isAuthenticated">
             <div class="column is-12 has-text-centered">
-              <a href="/sign-up" class="button is-info is-size-3 mt-6 mb 6">
-                click to get started
+              <a href="/sign-up" class="button is-info is-size-3 mt-6 mb-6">
+                Click to get started
               </a>
             </div>
           </template>
@@ -68,7 +49,7 @@
           <div
             class="column is-3 mt-3"
             v-for="course in courses"
-            v-bind:key="course.id"
+            :key="course.id"
           >
             <CourseItem :course="course" />
           </div>
@@ -80,7 +61,7 @@
 
 <script>
 import axios from "axios";
-
+import { mapState } from "vuex";
 import CourseItem from "@/components/Course/CourseItem";
 
 export default {
@@ -92,6 +73,11 @@ export default {
   },
   components: {
     CourseItem,
+  },
+  computed: {
+    ...mapState({
+      siteSetup: (state) => state.siteSetup.siteSetup,
+    }),
   },
   mounted() {
     console.log("mounted");

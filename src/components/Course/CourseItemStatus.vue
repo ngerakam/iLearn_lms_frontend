@@ -15,9 +15,7 @@
       <div class="content">
         <div class="columns">
           <div class="column">
-            <span class="tag is-text" v-if="course.status == 'draft'">
-              Draft
-            </span>
+            <span class="tag is-text" v-if="course.status == 'draft'"> Draft </span>
             <span class="tag is-link" v-if="course.status == 'published'">
               Published
             </span>
@@ -29,8 +27,10 @@
         <p>
           {{ course.short_description }}
         </p>
-        <router-link :to="{ name: 'Course', params: { slug: course.slug } }"
-          >More</router-link
+        <router-link
+          class="button is-success"
+          :to="{ name: 'CourseEditPage', params: { slug: course.slug } }"
+          >Edit</router-link
         >
       </div>
     </div>

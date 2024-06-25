@@ -16,7 +16,8 @@
                   <a
                     v-bind:class="{ 'is-active': !activeCategory }"
                     @click="setActiveCategory(null)"
-                    >All courses
+                  >
+                    All courses
                   </a>
                 </li>
                 <li
@@ -31,22 +32,20 @@
           </div>
           <div class="column is-10">
             <div class="columns is-multiline">
-              <!--  -->
-
               <div
                 class="column is-4"
-                v-for="course in courses"
+                v-for="course in paginatedCourses"
                 v-bind:key="course.id"
               >
                 <CourseItem :course="course" />
               </div>
-
-              <!--  -->
               <div class="column is-12">
-                <nav class="pagination">
-                  <a class="pagination-previous">Previous</a>
-                  <a class="pagination-next">Next</a>
-                </nav>
+                <PaginationComponent
+                  :totalItems="totalCourses"
+                  :itemsPerPage="itemsPerPage"
+                  :initialPage="currentPage"
+                  @page-changed="handlePageChanged"
+                />
               </div>
             </div>
           </div>
@@ -59,16 +58,22 @@
 <script>
 import axios from "axios";
 import CourseItem from "@/components/Course/CourseItem";
+import PaginationComponent from "@/components/Utils/PaginationComponent";
+
 export default {
   data() {
     return {
       courses: [],
       categories: [],
       activeCategory: null,
+      totalCourses: 0,
+      currentPage: 1,
+      itemsPerPage: 6,
     };
   },
   components: {
     CourseItem,
+    PaginationComponent,
   },
   async mounted() {
     console.log("mounted");
@@ -83,10 +88,17 @@ export default {
 
     document.title = "Courses | iLearn";
   },
+  computed: {
+    paginatedCourses() {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.courses.slice(start, end);
+    },
+  },
   methods: {
     setActiveCategory(category) {
       this.activeCategory = category;
-
+      this.currentPage = 1;
       this.getCourses();
     },
     getCourses() {
@@ -95,11 +107,16 @@ export default {
       if (this.activeCategory) {
         url += "?category_id=" + this.activeCategory.id;
       }
+
       axios.get(url).then((response) => {
         console.log(response.data);
 
         this.courses = response.data;
+        this.totalCourses = response.data.length;
       });
+    },
+    handlePageChanged(page) {
+      this.currentPage = page;
     },
   },
 };

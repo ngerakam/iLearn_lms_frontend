@@ -1,10 +1,20 @@
 <template>
   <div class="create-course">
     <div class="hero is-info">
-      <div class="hero-body has-text-centered">
-        <h1 class="title">Create Course</h1>
+      <div class="columns py-3 px-3">
+        <div class="column">
+          <button class="button is-small is-responsive" @click="goBack">
+            <i class="fas fa-arrow-left icon-spaced"></i>Back
+          </button>
+        </div>
+        <div class="column"></div>
+        <div class="column"></div>
+      </div>
+      <div class="has-text-centered mb-2">
+        <h1 class="title is-4">Create Course</h1>
       </div>
     </div>
+
     <div class="columns">
       <div class="column"></div>
       <div class="column is-10">
@@ -126,6 +136,9 @@ export default {
 
         this.categories = response.data;
       });
+    },
+    goBack() {
+      this.$router.back();
     },
     handleFileUpload(event) {
       this.form.image = event.target.files[0];

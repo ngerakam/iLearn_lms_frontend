@@ -18,9 +18,31 @@
         <div class="columns content">
           <div class="column is-2">
             <h2>Table of Contents</h2>
-            <ul>
+            <ul class="menu-list no-style">
               <li v-for="lesson in lessons" v-bind:key="lesson.id">
-                <a @click="setActiveLesson(lesson)">{{ lesson.title }}</a>
+                <a @click="setActiveLesson(lesson)">
+                  <i
+                    v-if="lesson.lesson_type === 'file'"
+                    class="fas fa-file icon-spaced"
+                  ></i>
+                  <i
+                    v-if="lesson.lesson_type === 'video' && lesson.youtube_id !== null"
+                    class="fab fa-youtube icon-spaced"
+                  ></i>
+                  <i
+                    v-if="lesson.lesson_type === 'video' && lesson.get_video !== null"
+                    class="fas fa-video icon-spaced"
+                  ></i>
+                  <i
+                    v-if="lesson.lesson_type === 'quiz'"
+                    class="fas fa-question icon-spaced"
+                  ></i>
+                  <i
+                    v-if="lesson.lesson_type === 'article'"
+                    class="fas fa-newspaper icon-spaced"
+                  ></i>
+                  {{ lesson.title }}</a
+                >
               </li>
             </ul>
           </div>
@@ -36,7 +58,7 @@
                     v-if="!isLessonCreateVisible"
                     @click="showLessonCreate"
                   >
-                    <i class="fas fa-plus"></i>
+                    <i class="fas fa-plus icon-spaced"></i>
                     Add Lesson
                   </button>
                 </div>
@@ -112,3 +134,22 @@ export default {
   },
 };
 </script>
+<style scoped>
+.icon-spaced {
+  margin-right: 8px;
+}
+.no-style {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.no-style li {
+  margin: 0;
+  padding: 0;
+}
+
+.no-style a {
+  text-decoration: none;
+}
+</style>

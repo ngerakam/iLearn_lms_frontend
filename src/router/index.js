@@ -12,6 +12,13 @@ import MyAccountView from "@/views/dashboard/MyAccountView.vue";
 import CreateCourse from "@/views/dashboard/CreateCourse.vue";
 import CourseCreateDetails from "@/views/dashboard/CourseCreateDetails.vue";
 import DashHome from "@/views/dashboard/DashHome.vue";
+// Teacher
+import TeacherCourseActivities from "@/views/dashboard/Teacher/TeacherCourseActivities.vue";
+import TeacherCompletedCourses from "@/views/dashboard/Teacher/TeacherCompletedCourses.vue";
+import CourseEditPage from "@/views/dashboard/Teacher/Course/CourseEditPage.vue";
+import EditLessonPage from "@/views/dashboard/Teacher/Lesson/EditLessonPage.vue";
+// Admin
+import UserEdit from "@/views/dashboard/Admin/UserEdit.vue";
 
 const routes = [
   {
@@ -24,11 +31,7 @@ const routes = [
     name: "About",
     component: AboutView,
   },
-  {
-    path: "/sign-up",
-    name: "SignUp",
-    component: SignUpView,
-  },
+
   {
     path: "/log-in",
     name: "Login",
@@ -56,6 +59,16 @@ const routes = [
     component: DashHome,
   },
   {
+    path: "/dashboard/add-user/",
+    name: "SignUp",
+    component: SignUpView,
+  },
+  {
+    path: "/dashboard/users/:id/user-edit",
+    name: "UserEdit",
+    component: UserEdit,
+  },
+  {
     path: "/dashboard/my-account",
     name: "MyAccount",
     component: MyAccountView,
@@ -69,6 +82,26 @@ const routes = [
     path: "/dashboard/create-course/:slug/",
     name: "CourseCreateDetails",
     component: CourseCreateDetails,
+  },
+  {
+    path: "/dashboard/edit-course/:slug/",
+    name: "CourseEditPage",
+    component: CourseEditPage,
+  },
+  {
+    path: "/dashboard/edit-course/:courseSlug/edit-lesson/:lessonSlug/",
+    name: "EditLessonPage",
+    component: EditLessonPage,
+  },
+  {
+    path: "/dashboard/course-activities/:id",
+    name: "TeacherCourseActivities",
+    component: TeacherCourseActivities,
+  },
+  {
+    path: "/dashboard/completed-course-activities/:id",
+    name: "TeacherCompletedCourses",
+    component: TeacherCompletedCourses,
   },
 ];
 

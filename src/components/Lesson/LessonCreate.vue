@@ -2,7 +2,7 @@
   <div class="create-course">
     <div class="hero is-info">
       <div class="hero-body has-text-centered">
-        <h3 class="title">Create a Lesson</h3>
+        <h3 class="title is-4">Create a Lesson</h3>
       </div>
     </div>
     <section class="section">
@@ -14,12 +14,7 @@
         <div class="field">
           <label class="label">Title</label>
           <div class="control">
-            <input
-              class="input"
-              type="text"
-              placeholder="Title"
-              v-model="form.title"
-            />
+            <input class="input" type="text" placeholder="Title" v-model="form.title" />
           </div>
         </div>
         <div class="field">
@@ -228,9 +223,7 @@ export default {
         this.errors.push("Title is required.");
       }
       if (this.isArticle && !this.form.long_description) {
-        this.errors.push(
-          "Long and Short description is required for articles."
-        );
+        this.errors.push("Long and Short description is required for articles.");
       }
       if (this.isVideo) {
         if (!this.form.youtube_id && !this.form.video) {
@@ -239,9 +232,7 @@ export default {
           );
         }
         if (this.form.youtube_id && this.form.video) {
-          this.errors.push(
-            "Please provide either Youtube ID or video file, not both."
-          );
+          this.errors.push("Please provide either Youtube ID or video file, not both.");
         }
       }
       if (this.isFile && !this.form.document) {

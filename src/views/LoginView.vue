@@ -10,9 +10,7 @@
         <div class="colums">
           <div class="column is-4 is-offset-4">
             <figure class="image is-128x128 ml-auto mr-auto">
-              <img
-                src="https://bulma.io/assets/images/placeholders/128x128.png"
-              />
+              <img :src="siteSetup.get_site_image" alt="placeholder-image" />
             </figure>
           </div>
           <div class="column is-4 is-offset-4">
@@ -51,6 +49,8 @@
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
+
 export default {
   data() {
     return {
@@ -62,12 +62,17 @@ export default {
   mounted() {
     document.title = "Login | iLearn";
   },
+  computed: {
+    ...mapState({
+      siteSetup: (state) => state.siteSetup.siteSetup,
+    }),
+  },
   methods: {
     removeNotif() {
       this.errors = [];
     },
-    submitForm() {
-      console.log("submited");
+    async submitForm() {
+      console.log("submitted");
 
       axios.defaults.headers.common["Authorization"] = "";
 
@@ -82,44 +87,43 @@ export default {
         this.errors.push("The password is missing!");
       }
 
-      if (!this.errors.lenght) {
+      if (!this.errors.length) {
         const formData = {
           email: this.email,
           password: this.password,
         };
 
-        axios
-          .post("authentication/login/", formData, {
+        try {
+          const response = await axios.post("authentication/login/", formData, {
             withCredentials: true,
-          })
-          .then((response) => {
-            const tokens = response.data;
-            console.log(response.data);
-
-            this.$store.commit("setToken", tokens);
-
-            axios.defaults.headers.common["Authorization"] =
-              "Bearer " + tokens.access;
-
-            localStorage.setItem("access_token", tokens.access);
-            localStorage.setItem("refresh_token", tokens.refresh);
-
-            this.$router.push("/dashboard/my-account");
-          })
-          .catch((error) => {
-            if (error.response) {
-              for (const property in error.response.data) {
-                this.errors.push(
-                  `${property}: ${error.response.data[property]}`
-                );
-              }
-              console.log(JSON.stringify(error.response.data));
-            } else if (error.message) {
-              this.errors.push("Something went wrong please try again");
-
-              console.log(JSON.stringify(error));
-            }
           });
+          const tokens = response.data;
+          console.log(response.data);
+
+          this.$store.commit("setToken", tokens);
+
+          axios.defaults.headers.common["Authorization"] =
+            "Bearer " + tokens.access;
+
+          localStorage.setItem("access_token", tokens.access);
+          localStorage.setItem("refresh_token", tokens.refresh);
+
+          // Fetch user details
+          await this.$store.dispatch("userDetails/fetchUserDetails");
+
+          this.$router.push("/dashboard/home");
+        } catch (error) {
+          if (error.response) {
+            for (const property in error.response.data) {
+              this.errors.push(`${property}: ${error.response.data[property]}`);
+            }
+            console.log(JSON.stringify(error.response.data));
+          } else if (error.message) {
+            this.errors.push("Something went wrong, please try again");
+
+            console.log(JSON.stringify(error));
+          }
+        }
       }
     },
   },

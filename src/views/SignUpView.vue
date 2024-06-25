@@ -1,8 +1,17 @@
 <template>
   <div class="signup">
     <div class="hero is-info">
-      <div class="hero-body has-text-centered">
-        <h1 class="title">Sign up</h1>
+      <div class="columns py-3 px-3">
+        <div class="column">
+          <button class="button is-small is-responsive" @click="goBack">
+            <i class="fas fa-arrow-left icon-spaced"></i>Back
+          </button>
+        </div>
+        <div class="column"></div>
+        <div class="column"></div>
+      </div>
+      <div class="mb-2 has-text-centered">
+        <h1 class="title is-4">Add User</h1>
       </div>
     </div>
     <section class="section">
@@ -34,11 +43,7 @@
                 <div class="control columns">
                   <div v-for="role in roles" :key="role" class="control column">
                     <label class="radio">
-                      <input
-                        type="radio"
-                        v-model="selectedRole"
-                        :value="role"
-                      />
+                      <input type="radio" v-model="selectedRole" :value="role" />
                       {{ role }}
                     </label>
                   </div>
@@ -66,7 +71,6 @@
               <p v-for="error in errors" :key="error">{{ error }}</p>
             </div>
             <hr />
-            Or <router-link to="/log-in">Click here</router-link> to log in
           </div>
         </div>
       </div>
@@ -118,14 +122,12 @@ export default {
           .post("authentication/register/", formData)
           .then((response) => {
             console.log(response.data);
-            this.$router.push("/log-in");
+            this.$router.back();
           })
           .catch((error) => {
             if (error.response) {
               for (const property in error.response.data) {
-                this.errors.push(
-                  `${property}: ${error.response.data[property]}`
-                );
+                this.errors.push(`${property}: ${error.response.data[property]}`);
               }
               console.log(JSON.stringify(error.response.data));
             } else if (error.message) {
@@ -136,6 +138,14 @@ export default {
           });
       }
     },
+    goBack() {
+      this.$router.back();
+    },
   },
 };
 </script>
+<style scoped>
+.icon-spaced {
+  margin-right: 8px;
+}
+</style>

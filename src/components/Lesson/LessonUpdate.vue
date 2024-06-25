@@ -1,12 +1,7 @@
 <template>
   <div class="create-course">
-    <div class="hero is-info">
-      <div class="hero-body has-text-centered">
-        <h3 class="title">Create a Lesson</h3>
-      </div>
-    </div>
     <section class="section">
-      <div class="px-6 py-4 has-background-white-ter">
+      <div class="px-2 py-2 has-background-white-ter">
         <div class="notification is-danger mt-3 mb-3" v-if="errors.length">
           <button class="delete" @click="removeNotif()"></button>
           <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
@@ -170,6 +165,12 @@ import axios from "axios";
 import UpdateQuestion from "../Quiz/UpdateQuestion.vue";
 
 export default {
+  props: {
+    lesson: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       form: {
@@ -186,6 +187,14 @@ export default {
       isQuizUpdateVisible: false,
       errors: [],
     };
+  },
+  watch: {
+    lesson: {
+      immediate: true,
+      handler(newLesson) {
+        this.form = { ...newLesson };
+      },
+    },
   },
   components: {
     UpdateQuestion,
@@ -263,19 +272,19 @@ export default {
 
       this.validateForm();
 
+      const courseSlug = this.$router.currentRoute.value.params.courseSlug;
+      const lessonSlug = this.$router.currentRoute.value.params.lessonSlug;
+
       axios
-        .post(
-          `courses/create-course/${this.$router.currentRoute.value.params.slug}/create-lesson/`,
-          this.form,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        )
+        .put(`courses/${courseSlug}/lessons/${lessonSlug}/update/`, this.form, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
         .then((response) => {
           console.log(response.data);
-          this.$emit("lesson-created");
+          this.$emit("lesson-updated");
+          this.$router.back();
         })
         .catch((error) => {
           console.log("error: ", error);
