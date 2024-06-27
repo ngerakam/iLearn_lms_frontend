@@ -55,18 +55,33 @@
             Admin
           </label>
           <label class="checkbox">
-            <input class="mr-2 ml-2" type="checkbox" v-model="userRoles.teacher" />
+            <input
+              class="mr-2 ml-2"
+              type="checkbox"
+              v-model="userRoles.teacher"
+            />
             Teacher
           </label>
           <label class="checkbox">
-            <input class="mr-2 ml-2" type="checkbox" v-model="userRoles.student" />
+            <input
+              class="mr-2 ml-2"
+              type="checkbox"
+              v-model="userRoles.student"
+            />
             Student
           </label>
         </div>
       </div>
       <div class="field">
-        <div class="control">
-          <button class="button is-primary">Save</button>
+        <div class="control buttons">
+          <button class="button is-primary">
+            <i class="fas fa-user-edit icon-spaced"></i>
+            Save
+          </button>
+          <button class="button is-danger" @click="handleDelete">
+            <i class="fas fa-minus icon-spaced"></i>
+            Delete
+          </button>
         </div>
       </div>
     </form>
@@ -118,8 +133,8 @@ export default {
         this.user.is_student = this.userRoles.student;
 
         // Make API call to update user details
-        await axios.put(`/authentication/user/${id}/`, this.user);
-        console.log(this.user);
+        await axios.put(`authentication/user/${id}/`, this.user);
+        // console.log(this.user);
 
         this.$router.back(); // Redirect to user list page
       } catch (error) {
@@ -128,6 +143,16 @@ export default {
     },
     goBack() {
       this.$router.back();
+    },
+    async handleDelete() {
+      const id = this.$route.params.id;
+      await axios
+        .delete(`authentication/user/${id}/delete/`)
+        .then((response) => {
+          if (response.data.message) {
+            // console.log(response.data);
+          }
+        });
     },
   },
 };

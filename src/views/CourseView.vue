@@ -1,12 +1,21 @@
 <template>
   <div class="courses">
     <div class="hero is-info">
-      <div class="hero-body has-text-centered">
+      <div class="columns py-3 px-3">
+        <div class="column">
+          <button class="button is-small is-responsive" @click="goBack">
+            <i class="fas fa-arrow-left icon-spaced"></i>Back
+          </button>
+        </div>
+        <div class="column"></div>
+        <div class="column"></div>
+      </div>
+      <div class="has-text-centered">
         <h1 class="title">{{ course?.title }}</h1>
 
         <router-link
           :to="{ name: 'Author', params: { id: course?.created_by?.id } }"
-          class="subtitle"
+          class="subtitle mb-3"
         >
           By:
           {{
@@ -100,9 +109,9 @@
                             courseActivity?.course_status?.status === 'done'
                           "
                         >
-                          <router-link class="button is-primary" to="/courses">
+                          <span class="tag is-success" @click="handleComplete">
                             Completed
-                          </router-link>
+                          </span>
                         </div>
                         <div
                           class="column is-12"
@@ -241,12 +250,12 @@
                               courseActivity.course_status.status === 'done'
                             "
                           >
-                            <router-link
-                              class="button is-primary"
-                              to="/courses"
+                            <span
+                              class="tag is-success"
+                              @click="handleComplete"
                             >
                               Completed
-                            </router-link>
+                            </span>
                           </template>
                           <template v-else>
                             <button
@@ -256,6 +265,18 @@
                               Finish Course
                             </button>
                           </template>
+                        </div>
+                        <div class="column is-12" v-else>
+                          <nav class="pagination">
+                            <a
+                              class="pagination-previous"
+                              @click="previousLesson"
+                              >Previous</a
+                            >
+                            <a class="pagination-next" @click="nextLesson"
+                              >Next</a
+                            >
+                          </nav>
                         </div>
                       </div>
                     </div>
@@ -270,7 +291,14 @@
                 {{ course.long_description }}
               </template>
               <template v-if="activeLesson && !isLastLesson">
-                <div class="column is-12">
+                <div
+                  v-if="
+                    activeLesson &&
+                    activeLesson.lesson_type === 'file' &&
+                    getFileType(activeLesson.get_file) === 'pptx'
+                  "
+                ></div>
+                <div class="column is-12" v-else>
                   <nav class="pagination">
                     <a class="pagination-previous" @click="previousLesson"
                       >Previous</a
@@ -279,8 +307,15 @@
                   </nav>
                 </div>
               </template>
+              <div
+                v-if="
+                  activeLesson &&
+                  activeLesson.lesson_type === 'file' &&
+                  getFileType(activeLesson.get_file) === 'pptx'
+                "
+              ></div>
 
-              <div class="columns">
+              <div class="columns" v-else>
                 <div class="column"></div>
                 <div class="column"></div>
                 <div class="column">
@@ -296,9 +331,9 @@
                         courseActivity.course_status.status === 'done'
                       "
                     >
-                      <router-link class="button is-primary" to="/courses">
+                      <span class="tag is-success" @click="handleComplete">
                         Completed
-                      </router-link>
+                      </span>
                     </template>
                     <template v-else>
                       <button class="button is-primary" @click="finishCourse">
@@ -330,8 +365,9 @@
               <h2>Access Restricted</h2>
               <p>You are required to login so as to access this course.</p>
               <p>
-                If you do not have an account kindly reach out to site admin :
-                (example@siteadmin.com) for an account!
+                If you do not have an account kindly reach out to site admin ({{
+                  siteSetup?.addresses?.email_contact
+                }}) : for an account!
               </p>
             </template>
           </div>
@@ -342,6 +378,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import axios from "axios";
 import CourseComment from "@/components/Comments/CourseComment";
 import AddComment from "@/components/Comments/AddComment";
@@ -385,11 +422,12 @@ export default {
       startedValue: null,
     };
   },
+
   async mounted() {
-    console.log("mounted");
+    this.isCourseStarted();
+    this.verifyEnrollment();
 
     const slug = this.$router.currentRoute.value.params.slug;
-    console.log(slug);
 
     await axios.get(`courses/${slug}/`).then((response) => {
       console.log(response.data);
@@ -397,13 +435,12 @@ export default {
       this.course = response.data.course;
       this.lessons = response.data.lessons;
     });
-
-    this.verifyEnrollment();
-    this.isCourseStarted();
-
     document.title = this.course.title + " | iLearn";
   },
   computed: {
+    ...mapState({
+      siteSetup: (state) => state.siteSetup.siteSetup,
+    }),
     isLastLesson() {
       return (
         this.lessons.findIndex(
@@ -557,8 +594,9 @@ export default {
         });
     },
     verifyEnrollment() {
+      const slug = this.$router.currentRoute.value.params.slug;
       axios
-        .get(`activities/verify_enrolled_course/${this.course.slug}`)
+        .get(`activities/verify_enrolled_course/${slug}`)
         .then((response) => {
           this.enrollmentValue =
             response.data.status === 200 ? "enrolled" : null;
@@ -597,7 +635,7 @@ export default {
         (lesson) => lesson.id === this.activeLesson.id
       );
       if (currentIndex !== -1 && currentIndex < this.lessons.length - 1) {
-        this.setActiveLesson(this.lessons[currentIndex + 1]);
+        this.handleNextLesson(currentIndex + 1);
       }
     },
     previousLesson() {
@@ -605,12 +643,13 @@ export default {
         (lesson) => lesson.id === this.activeLesson.id
       );
       if (currentIndex > 0) {
-        this.setActiveLesson(this.lessons[currentIndex - 1]);
+        this.handlePreviousLesson(currentIndex - 1);
       }
     },
     isCourseStarted() {
+      const slug = this.$router.currentRoute.value.params.slug;
       axios
-        .get(`activities/verify_started_course/${this.course.slug}`)
+        .get(`activities/verify_started_course/${slug}`)
         .then((response) => {
           this.startedValue = response.data.status === 200 ? "started" : null;
 
@@ -657,6 +696,65 @@ export default {
 
           this.$router.push("/courses");
         });
+    },
+    handleComplete() {
+      this.$router.back();
+    },
+    goBack() {
+      this.$router.back();
+    },
+    handleNextLesson(nextIndex) {
+      // Store a reference to the current active lesson ID for comparison after setting the new lesson
+      const currentLessonId = this.activeLesson.id;
+
+      // Set the new active lesson
+      this.setActiveLesson(this.lessons[nextIndex]);
+
+      // Check if the active lesson was a PPTX file and removed its viewer
+      if (
+        this.activeLesson.lesson_type === "file" &&
+        this.getFileType(this.activeLesson.get_file) === "pptx"
+      ) {
+        const item = document.getElementById("pptxViewer");
+        if (item) {
+          item.remove();
+
+          this.$nextTick(() => {
+            // Check if the lesson ID has changed to handle any specific post-removal actions
+            if (this.activeLesson.id !== currentLessonId) {
+              // Perform any post-removal actions here
+              // For example, you might want to reload or update specific components or data
+            }
+          });
+        }
+      }
+    },
+
+    handlePreviousLesson(prevIndex) {
+      // Store a reference to the current active lesson ID for comparison after setting the new lesson
+      const currentLessonId = this.activeLesson.id;
+
+      // Set the new active lesson
+      this.setActiveLesson(this.lessons[prevIndex]);
+
+      // Check if the active lesson was a PPTX file and removed its viewer
+      if (
+        this.activeLesson.lesson_type === "file" &&
+        this.getFileType(this.activeLesson.get_file) === "pptx"
+      ) {
+        const item = document.getElementById("pptxViewer");
+        if (item) {
+          item.remove();
+
+          this.$nextTick(() => {
+            // Check if the lesson ID has changed to handle any specific post-removal actions
+            if (this.activeLesson.id !== currentLessonId) {
+              // Perform any post-removal actions here
+              // For example, you might want to reload or update specific components or data
+            }
+          });
+        }
+      }
     },
   },
 };

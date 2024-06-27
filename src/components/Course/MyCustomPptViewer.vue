@@ -7,8 +7,8 @@ export default {
   props: {
     fileUrl: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   async mounted() {
     // Dynamically load the CSS files
@@ -29,14 +29,14 @@ export default {
   },
   methods: {
     loadCSS(href) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
       link.href = href;
       document.head.appendChild(link);
     },
     loadScript(src) {
       return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
+        const script = document.createElement("script");
         script.src = src;
         script.onload = resolve;
         script.onerror = reject;
@@ -63,13 +63,13 @@ export default {
           loop: false,
           background: "black",
           transition: "default",
-          transitionTime: 1
-        }
+          transitionTime: 1,
+        },
       };
 
       $("#pptxViewer").pptxToHtml(pptxConfig);
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -14,7 +14,12 @@
         <div class="field">
           <label class="label">Title</label>
           <div class="control">
-            <input class="input" type="text" placeholder="Title" v-model="form.title" />
+            <input
+              class="input"
+              type="text"
+              placeholder="Title"
+              v-model="form.title"
+            />
           </div>
         </div>
         <div class="field">
@@ -145,12 +150,14 @@
         <div class="field is-grouped">
           <div class="control">
             <button class="button is-success" @click="submitForm('draft')">
+              <i class="fa fa-check icon-spaced"></i>
               Save as draft
             </button>
           </div>
 
           <div class="control">
             <button class="button is-link" @click="submitForm('published')">
+              <i class="fa fa-check icon-spaced"></i>
               Publish
             </button>
           </div>
@@ -223,7 +230,9 @@ export default {
         this.errors.push("Title is required.");
       }
       if (this.isArticle && !this.form.long_description) {
-        this.errors.push("Long and Short description is required for articles.");
+        this.errors.push(
+          "Long and Short description is required for articles."
+        );
       }
       if (this.isVideo) {
         if (!this.form.youtube_id && !this.form.video) {
@@ -232,7 +241,9 @@ export default {
           );
         }
         if (this.form.youtube_id && this.form.video) {
-          this.errors.push("Please provide either Youtube ID or video file, not both.");
+          this.errors.push(
+            "Please provide either Youtube ID or video file, not both."
+          );
         }
       }
       if (this.isFile && !this.form.document) {
@@ -275,3 +286,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+.icon-spaced {
+  margin-right: 8px;
+}
+</style>

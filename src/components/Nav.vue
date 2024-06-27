@@ -24,15 +24,18 @@
           >iLearn LMS</a
         >
 
-        <a v-else href="/" class="navbar-item is-size-4">{{ siteSetup.title }}</a>
+        <a v-else href="/" class="navbar-item is-size-4">{{
+          siteSetup.title
+        }}</a>
       </template>
     </div>
     <div class="navbar-menu" id="navbar-item">
       <div class="navbar-start">
         <template v-if="$store.state.user.isAuthenticated">
-          <router-link to="/dashboard/home" class="navbar-item">Home</router-link>
+          <router-link to="/dashboard/home" class="navbar-item"
+            >Home</router-link
+          >
           <router-link to="/About" class="navbar-item">About</router-link>
-          <router-link to="/courses" class="navbar-item">Courses</router-link>
         </template>
         <template v-else>
           <router-link to="/" class="navbar-item">Home</router-link>
@@ -45,13 +48,19 @@
           <div class="buttons">
             <template v-if="$store.state.user.isAuthenticated">
               <a class="navbar-item"
-                ><span class="tag is-link" v-if="userDetails?.user?.is_superuser">
+                ><span
+                  class="tag is-link"
+                  v-if="userDetails?.user?.is_superuser"
+                >
                   Admin
                 </span>
                 <span class="tag is-link" v-if="userDetails?.user?.is_teacher">
                   Teacher
                 </span>
-                <span class="tag is-success" v-if="userDetails?.user?.is_student">
+                <span
+                  class="tag is-success"
+                  v-if="userDetails?.user?.is_student"
+                >
                   Student
                 </span>
               </a>
@@ -66,7 +75,8 @@
                 <div class="navbar-dropdown">
                   <router-link
                     v-if="
-                      userDetails?.user?.is_teacher || userDetails?.user?.is_superuser
+                      userDetails?.user?.is_teacher ||
+                      userDetails?.user?.is_superuser
                     "
                     to="/dashboard/create-course"
                     class="navbar-item"
@@ -80,8 +90,10 @@
               </div>
             </template>
             <template v-else>
-              <a href="/log-in" class="button is-light">Log in</a>
-              <a href="/sign-up" class="button is-primary">SignUp</a>
+              <a href="/log-in" class="button is-light">
+                <i class="fas fa-sign-in-alt icon-spaced"></i>
+                Log in</a
+              >
             </template>
           </div>
         </div>

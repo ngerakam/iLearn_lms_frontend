@@ -40,7 +40,7 @@ import UserSettings from "@/components/User/UserSettings";
 export default {
   data() {
     return {
-      activeClass: "Courses",
+      activeClass: "Settings",
     };
   },
   components: {

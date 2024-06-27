@@ -10,7 +10,7 @@
         <div class="colums">
           <div class="column is-4 is-offset-4">
             <figure class="image is-128x128 ml-auto mr-auto">
-              <img :src="siteSetup.get_site_image" alt="placeholder-image" />
+              <img :src="siteSetup?.get_site_image" alt="placeholder-image" />
             </figure>
           </div>
           <div class="column is-4 is-offset-4">
@@ -39,7 +39,8 @@
               <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
             </div>
             <hr />
-            Or <router-link to="/sign-up">Click here</router-link> to sign up!
+            Or contact the site admin({{ siteSetup?.addresses?.email_contact }})
+            for registration!
           </div>
         </div>
       </div>

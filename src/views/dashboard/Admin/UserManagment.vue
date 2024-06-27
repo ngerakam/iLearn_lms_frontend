@@ -7,7 +7,10 @@
           <!-- Total Users Card -->
           <div class="card custom-card">
             <header class="card-header">
-              <p class="card-header-title">Total Users</p>
+              <p class="card-header-title">
+                <i class="fas fa-users icon-spaced"></i>
+                Total Users
+              </p>
             </header>
             <div class="card-content">
               <div class="content">
@@ -18,7 +21,10 @@
           <!-- Admins Card -->
           <div class="card custom-card">
             <header class="card-header">
-              <p class="card-header-title">Admins</p>
+              <p class="card-header-title">
+                <i class="fas fa-users-cog icon-spaced"></i>
+                Admins
+              </p>
             </header>
             <div class="card-content">
               <div class="content">
@@ -29,7 +35,10 @@
           <!-- Teachers Card -->
           <div class="card custom-card">
             <header class="card-header">
-              <p class="card-header-title">Teachers</p>
+              <p class="card-header-title">
+                <i class="fas fa-chalkboard-teacher icon-spaced"></i>
+                Teachers
+              </p>
             </header>
             <div class="card-content">
               <div class="content">
@@ -40,7 +49,10 @@
           <!-- Students Card -->
           <div class="card custom-card">
             <header class="card-header">
-              <p class="card-header-title">Students</p>
+              <p class="card-header-title">
+                <i class="fas fa-user-graduate icon-spaced"></i>
+                Students
+              </p>
             </header>
             <div class="card-content">
               <div class="content">
@@ -63,7 +75,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="user in users" :key="user.id" @click="editUser(user.id)">
+              <tr
+                v-for="user in users"
+                :key="user.id"
+                @click="editUser(user.id)"
+              >
                 <td>{{ user.first_name }} {{ user.last_name }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ getRole(user) }}</td>
@@ -143,9 +159,11 @@ export default {
 
 <style scoped>
 .custom-card {
-  height: 120px; /* Adjust height as needed */
-  width: 100%; /* Ensures full width */
-  margin-bottom: 20px; /* Adds space between cards */
-  /* Additional custom styles can be added */
+  height: 120px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.icon-spaced {
+  margin-right: 8px;
 }
 </style>

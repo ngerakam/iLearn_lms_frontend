@@ -50,18 +50,35 @@
                   ></textarea>
                 </div>
               </div>
-              <div class="field">
-                <label class="label">Choose category</label>
-                <div class="select is-multiple">
-                  <select multiple size="3" v-model="form.categories">
-                    <option
-                      v-for="category in categories"
-                      v-bind:key="category.id"
-                      v-bind:value="category.id"
+              <div class="columns">
+                <div class="column">
+                  <div class="field">
+                    <label class="label">Choose category</label>
+                    <div class="select is-multiple">
+                      <select multiple size="3" v-model="form.categories">
+                        <option
+                          v-for="category in categories"
+                          v-bind:key="category.id"
+                          v-bind:value="category.id"
+                        >
+                          {{ category.title }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="column">
+                  <div class="field mt-3">
+                    <label class="label">Add category</label>
+                    <button
+                      class="button is-secondary"
+                      @click="openCategoryModal"
                     >
-                      {{ category.title }}
-                    </option>
-                  </select>
+                      <span class="icon">
+                        <i class="fas fa-plus"></i>
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
               <div class="file has-name">
@@ -87,16 +104,19 @@
             <div class="field is-grouped">
               <div class="control">
                 <button class="button is-success" @click="submitForm('draft')">
+                  <i class="fa fa-check icon-spaced"></i>
                   Save as draft
                 </button>
               </div>
               <div class="control">
                 <button class="button is-info" @click="submitForm('in_review')">
+                  <i class="fa fa-check icon-spaced"></i>
                   Submit for review
                 </button>
               </div>
               <div class="control">
                 <button class="button is-link" @click="submitForm('published')">
+                  <i class="fa fa-check icon-spaced"></i>
                   Publish
                 </button>
               </div>
@@ -105,11 +125,13 @@
         </section>
       </div>
     </div>
+    <CategoryModal ref="categoryModal" />
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import CategoryModal from "@/components/Categories/CategoryModal.vue";
 
 export default {
   data() {
@@ -124,6 +146,9 @@ export default {
       },
       categories: [],
     };
+  },
+  components: {
+    CategoryModal,
   },
   mounted() {
     this.getCategories();
@@ -165,6 +190,14 @@ export default {
           console.log("error: ", error);
         });
     },
+    openCategoryModal() {
+      this.$refs.categoryModal.openModal();
+    },
   },
 };
 </script>
+<style scoped>
+.icon-spaced {
+  margin-right: 8px;
+}
+</style>

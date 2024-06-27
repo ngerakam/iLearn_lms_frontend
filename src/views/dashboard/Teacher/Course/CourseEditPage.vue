@@ -87,11 +87,13 @@
       <div class="column"></div>
       <div class="column"></div>
       <div class="column"></div>
-      <div class="column">
-        <button class="button is-primary" @click="openModal">
-          <i class="fas fa-plus icon-spaced"></i>
-          Add Lesson
-        </button>
+      <div class="column field is-grouped">
+        <div class="control">
+          <button class="button is-primary" @click="openModal">
+            <i class="fas fa-plus icon-spaced"></i>
+            Add Lesson
+          </button>
+        </div>
       </div>
     </div>
   </div>

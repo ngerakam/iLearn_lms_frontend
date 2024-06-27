@@ -80,10 +80,17 @@
               </label>
             </div>
           </div>
-          <div class="field">
+          <div class="field is-grouped">
             <div class="control">
               <button class="button is-primary" type="submit">
+                <i class="far fa-edit icon-spaced"></i>
                 Update Course
+              </button>
+            </div>
+            <div class="control">
+              <button class="button is-danger" @click="handleDelete">
+                <i class="fas fa-minus icon-spaced"></i>
+                Delete Course
               </button>
             </div>
           </div>
@@ -177,6 +184,14 @@ export default {
         console.error("Error updating course:", error);
       }
     },
+    async handleDelete() {
+      console.log("delete course: ", this.course.title);
+    },
   },
 };
 </script>
+<style scoped>
+.icon-spaced {
+  margin-right: 8px;
+}
+</style>

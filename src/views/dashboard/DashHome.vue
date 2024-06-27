@@ -105,6 +105,31 @@
           </div>
         </div>
 
+        <!-- Completed Courses Tab -->
+        <div v-if="activeClass === 'Completed Courses'">
+          <div v-if="completed_courses.length === 0">
+            You have not completed any course.
+          </div>
+          <div v-else class="columns is-multiline">
+            <div
+              class="column is-3"
+              v-for="course in paginatedCompletedCourses"
+              :key="course.id"
+            >
+              <CourseItem :course="course" />
+            </div>
+          </div>
+          <div class="column is-7 mx-auto">
+            <PaginationComponent
+              v-if="completed_courses.length > itemsPerPage"
+              :totalItems="completed_courses.length"
+              :itemsPerPage="itemsPerPage"
+              :initialPage="currentPage.unpub"
+              @page-changed="handlePageChanged('completed', $event)"
+            />
+          </div>
+        </div>
+
         <!-- Unpublished Courses Tab -->
         <div v-if="activeClass === 'Unpublished Courses'">
           <div v-if="unpub_courses.length === 0">
@@ -150,7 +175,7 @@
             <div class="column"></div>
             <div class="column">
               <router-link to="/dashboard/add-user/" class="button is-primary">
-                <i class="fas fa-plus icon-spaced"></i>
+                <i class="fas fa-user-plus icon-spaced"></i>
                 Add User
               </router-link>
             </div>
@@ -199,6 +224,7 @@ export default {
         all: 1,
         own: 1,
         unpub: 1,
+        completed: 1,
       },
     };
   },
@@ -219,11 +245,11 @@ export default {
       const userRoles = this.userDetails.user;
       let tabs = ["Courses"]; // Always include 'Courses'
 
-      if (userRoles.is_student) {
+      if (userRoles?.is_student) {
         tabs.push("Enrolled Courses", "Completed Courses");
       }
 
-      if (userRoles.is_teacher) {
+      if (userRoles?.is_teacher) {
         tabs = [
           "Courses Statistics",
           "Created Courses",
@@ -232,7 +258,7 @@ export default {
         ];
       }
 
-      if (userRoles.is_superuser) {
+      if (userRoles?.is_superuser) {
         tabs = [
           "User Management",
           "Website Management",
@@ -243,6 +269,9 @@ export default {
       }
 
       return tabs;
+    },
+    paginatedCompletedCourses() {
+      return this.paginate(this.completed_courses, this.currentPage.completed);
     },
     paginatedEnrolledCourses() {
       return this.paginate(this.enrolled_courses, this.currentPage.enrolled);
@@ -276,7 +305,7 @@ export default {
   },
   methods: {
     getDoneCourses() {
-      axios.get("courses/get_my_completed_courses/").then((response) => {
+      axios.get("activities/get_my_completed_courses/").then((response) => {
         this.completed_courses = response.data;
       });
     },

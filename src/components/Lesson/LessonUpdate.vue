@@ -145,13 +145,21 @@
         <div class="field is-grouped">
           <div class="control">
             <button class="button is-success" @click="submitForm('draft')">
+              <i class="far fa-edit icon-spaced"></i>
               Save as draft
             </button>
           </div>
 
           <div class="control">
             <button class="button is-link" @click="submitForm('published')">
+              <i class="far fa-edit icon-spaced"></i>
               Publish
+            </button>
+          </div>
+          <div class="control">
+            <button class="button is-danger" @click="handleDelete">
+              <i class="fas fa-minus icon-spaced"></i>
+              Delete
             </button>
           </div>
         </div>
@@ -290,6 +298,27 @@ export default {
           console.log("error: ", error);
         });
     },
+    async handleDelete() {
+      const courseSlug = this.$router.currentRoute.value.params.courseSlug;
+      const lessonSlug = this.$router.currentRoute.value.params.lessonSlug;
+
+      axios
+        .delete(`courses/${courseSlug}/lessons/${lessonSlug}/delete/`)
+        .then((response) => {
+          if (response.data.message) {
+            console.log(response.data);
+            // this.$router.back();
+          }
+        })
+        .catch((error) => {
+          console.log("error: ", error);
+        });
+    },
   },
 };
 </script>
+<style scoped>
+.icon-spaced {
+  margin-right: 8px;
+}
+</style>
