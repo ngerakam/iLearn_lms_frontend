@@ -8,33 +8,29 @@
     <div class="navbar-brand">
       <template v-if="$store.state.user.isAuthenticated">
         <a
-          v-if="siteSetup.title === ''"
-          href="/dashboard/home"
+          v-if="siteSetup?.title === ''"
+          href="/dashboard/"
           class="navbar-item is-size-4"
         >
           iLearn LMS
         </a>
 
-        <a v-else href="/dashboard/home" class="navbar-item is-size-4">{{
-          siteSetup.title
+        <a v-else href="/dashboard/" class="navbar-item is-size-4">{{
+          siteSetup?.title
         }}</a>
       </template>
       <template v-else>
-        <a v-if="siteSetup.title === ''" href="/" class="navbar-item is-size-4"
+        <a v-if="siteSetup?.title === ''" href="/" class="navbar-item is-size-4"
           >iLearn LMS</a
         >
 
-        <a v-else href="/" class="navbar-item is-size-4">{{
-          siteSetup.title
-        }}</a>
+        <a v-else href="/" class="navbar-item is-size-4">{{ siteSetup?.title }}</a>
       </template>
     </div>
     <div class="navbar-menu" id="navbar-item">
       <div class="navbar-start">
         <template v-if="$store.state.user.isAuthenticated">
-          <router-link to="/dashboard/home" class="navbar-item"
-            >Home</router-link
-          >
+          <router-link to="/dashboard/" class="navbar-item">Home</router-link>
           <router-link to="/About" class="navbar-item">About</router-link>
         </template>
         <template v-else>
@@ -48,19 +44,13 @@
           <div class="buttons">
             <template v-if="$store.state.user.isAuthenticated">
               <a class="navbar-item"
-                ><span
-                  class="tag is-link"
-                  v-if="userDetails?.user?.is_superuser"
-                >
+                ><span class="tag is-link" v-if="userDetails?.user?.is_admin">
                   Admin
                 </span>
                 <span class="tag is-link" v-if="userDetails?.user?.is_teacher">
                   Teacher
                 </span>
-                <span
-                  class="tag is-success"
-                  v-if="userDetails?.user?.is_student"
-                >
+                <span class="tag is-success" v-if="userDetails?.user?.is_student">
                   Student
                 </span>
               </a>
@@ -74,15 +64,12 @@
 
                 <div class="navbar-dropdown">
                   <router-link
-                    v-if="
-                      userDetails?.user?.is_teacher ||
-                      userDetails?.user?.is_superuser
-                    "
+                    v-if="userDetails?.user?.is_teacher || userDetails?.user?.is_admin"
                     to="/dashboard/create-course"
                     class="navbar-item"
                     >Create Course</router-link
                   >
-                  <router-link to="/dashboard/my-account" class="navbar-item"
+                  <router-link to="/dashboard/account" class="navbar-item"
                     >My account</router-link
                   >
                   <a @click="logout()" class="navbar-item">Log out</a>
@@ -117,9 +104,14 @@ export default {
     async logout() {
       console.log("logout");
 
-      await axios.post("token/logout/").then((response) => {
-        console.log("Logged out");
-      });
+      const refresh_token = localStorage.getItem("refresh_token");
+
+      await axios
+        .post("authentication/logout/", { refresh_token: refresh_token })
+        .then((response) => {
+          console.log(response.data);
+          console.log("Logged out");
+        });
 
       axios.defaults.headers.common["Authorization"] = "";
 

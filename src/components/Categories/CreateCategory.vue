@@ -2,10 +2,7 @@
   <div class="create-category">
     <div class="columns">
       <div class="column is-12">
-        <div
-          class="notification is-danger mt-3 mb-3"
-          v-if="form?.errors?.length"
-        >
+        <div class="notification is-danger mt-3 mb-3" v-if="form?.errors?.length">
           <button class="delete" @click="removeNotif()"></button>
           <p v-for="error in form.errors" v-bind:key="error">{{ error }}</p>
         </div>
@@ -73,7 +70,7 @@ export default {
         this.form.errors.push("The short description is missing!");
       }
       try {
-        const response = await axios.post("courses/add_category/", this.form);
+        const response = await axios.post("courses/categories/", this.form);
         const newCategory = response.data;
         this.$emit("category-added", newCategory);
         this.clearForm();

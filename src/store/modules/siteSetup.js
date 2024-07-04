@@ -18,8 +18,8 @@ const actions = {
   async fetchSiteSetup({ commit }) {
     try {
       const response = await axios.get("authentication/site-setup/");
-      commit("setSiteSetup", response.data);
-      return response.data; // Ensure a promise is returned
+      commit("setSiteSetup", response.data.data);
+      return response.data.data; // Ensure a promise is returned
     } catch (error) {
       console.error("Error fetching site setup data:", error);
       throw error; // Ensure the error is propagated

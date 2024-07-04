@@ -46,11 +46,7 @@
 
           <hr />
 
-          <div
-            class="column is-3 mt-3"
-            v-for="course in courses"
-            :key="course.id"
-          >
+          <div class="column is-3 mt-3" v-for="course in courses" :key="course.id">
             <CourseItem :course="course" />
           </div>
         </div>
@@ -82,10 +78,10 @@ export default {
   mounted() {
     console.log("mounted");
 
-    axios.get("courses/get_frontpage_courses/").then((response) => {
+    axios.get("activities/courses/frontpage/").then((response) => {
       console.log(response.data);
 
-      this.courses = response.data;
+      this.courses = response.data.data;
     });
 
     document.title = "Home | iLearn";

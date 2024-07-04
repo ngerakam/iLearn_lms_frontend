@@ -9,12 +9,12 @@ import AuthorView from "@/views/AuthorView.vue";
 
 // Dashboard
 import MyAccountView from "@/views/dashboard/MyAccountView.vue";
-import CreateCourse from "@/views/dashboard/CreateCourse.vue";
-import CourseCreateDetails from "@/views/dashboard/CourseCreateDetails.vue";
 import DashHome from "@/views/dashboard/DashHome.vue";
 // Teacher
 import TeacherCourseActivities from "@/views/dashboard/Teacher/TeacherCourseActivities.vue";
 import TeacherCompletedCourses from "@/views/dashboard/Teacher/TeacherCompletedCourses.vue";
+import CreateCourse from "@/views/dashboard/Teacher/Course/CreateCourse.vue";
+import CourseCreateDetails from "@/views/dashboard/Teacher/Course/CourseCreateDetails.vue";
 import CourseEditPage from "@/views/dashboard/Teacher/Course/CourseEditPage.vue";
 import EditLessonPage from "@/views/dashboard/Teacher/Lesson/EditLessonPage.vue";
 // Admin
@@ -53,9 +53,8 @@ const routes = [
     component: AuthorView,
   },
   {
-    path: "/dashboard/home",
+    path: "/dashboard/",
     name: "DashHome",
-    // component: MyAccountView,
     component: DashHome,
   },
   {
@@ -69,7 +68,7 @@ const routes = [
     component: UserEdit,
   },
   {
-    path: "/dashboard/my-account",
+    path: "/dashboard/account",
     name: "MyAccount",
     component: MyAccountView,
   },

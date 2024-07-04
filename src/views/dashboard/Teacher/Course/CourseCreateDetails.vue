@@ -88,7 +88,7 @@
 
 <script>
 import axios from "axios";
-import LessonCreate from "../../components/Lesson/LessonCreate.vue";
+import LessonCreate from "../../../../components/Lesson/LessonCreate.vue";
 
 export default {
   components: {

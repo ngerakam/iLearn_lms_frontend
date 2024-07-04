@@ -175,8 +175,7 @@ export default {
     async fetchSiteSetup() {
       try {
         const response = await axios.get("authentication/site-setup/");
-        this.siteSetup = response.data;
-        // this.siteSetup.login_image = response.data.get_site_image;
+        this.siteSetup = response.data.data;
       } catch (error) {
         console.error("Error fetching site setup:", error);
       }
@@ -206,15 +205,19 @@ export default {
         }
 
         // Log the FormData for debugging
-        for (const pair of formData.entries()) {
-          console.log(`${pair[0]}, ${pair[1]}`);
-        }
+        // for (const pair of formData.entries()) {
+        //   console.log(`${pair[0]}, ${pair[1]}`);
+        // }
 
         const response = await axios.put("authentication/site-setup/", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
+        if (response.status === 200) {
+          // console.log("returned OK");
+          this.$router.go("/dashboard");
+        }
       } catch (error) {
         console.error("Error updating site setup:", error);
       }

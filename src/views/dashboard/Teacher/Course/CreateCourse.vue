@@ -70,10 +70,7 @@
                 <div class="column">
                   <div class="field mt-3">
                     <label class="label">Add category</label>
-                    <button
-                      class="button is-secondary"
-                      @click="openCategoryModal"
-                    >
+                    <button class="button is-secondary" @click="openCategoryModal">
                       <span class="icon">
                         <i class="fas fa-plus"></i>
                       </span>
@@ -156,10 +153,10 @@ export default {
   methods: {
     async getCategories() {
       console.log("categories");
-      await axios.get("courses/get_categories/").then((response) => {
-        console.log(response.data);
+      await axios.get("courses/categories/").then((response) => {
+        // console.log(response.data);
 
-        this.categories = response.data;
+        this.categories = response.data.data;
       });
     },
     goBack() {
@@ -176,14 +173,14 @@ export default {
       this.form.status = status;
 
       await axios
-        .post("courses/create-course/", this.form, {
+        .post("courses/", this.form, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         })
         .then((response) => {
-          console.log(response.data);
-          const slug = response.data.slug;
+          // console.log(response.data);
+          const slug = response.data.data.slug;
           this.$router.push({ name: "CourseCreateDetails", params: { slug } });
         })
         .catch((error) => {

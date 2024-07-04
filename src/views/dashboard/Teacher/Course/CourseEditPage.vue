@@ -29,15 +29,11 @@
                   class="fas fa-file icon-spaced"
                 ></i>
                 <i
-                  v-if="
-                    lesson.lesson_type === 'video' && lesson.youtube_id !== null
-                  "
+                  v-if="lesson.lesson_type === 'video' && lesson.youtube_id !== null"
                   class="fab fa-youtube icon-spaced"
                 ></i>
                 <i
-                  v-if="
-                    lesson.lesson_type === 'video' && lesson.get_video !== null
-                  "
+                  v-if="lesson.lesson_type === 'video' && lesson.get_video !== null"
                   class="fas fa-video icon-spaced"
                 ></i>
                 <i
@@ -65,11 +61,7 @@
       <div class="modal-card custom-modal-width">
         <header class="modal-card-head">
           <p class="modal-card-title">Add Lesson</p>
-          <button
-            class="delete"
-            aria-label="close"
-            @click="closeModal"
-          ></button>
+          <button class="delete" aria-label="close" @click="closeModal"></button>
         </header>
         <section class="modal-card-body">
           <!-- Include LessonCreate component here -->
@@ -129,7 +121,7 @@ export default {
     await axios.get(`courses/${slug}/`).then((response) => {
       console.log(response.data);
 
-      this.course = response.data.course;
+      this.course = response.data.data;
       this.lessons = response.data.lessons;
     });
 

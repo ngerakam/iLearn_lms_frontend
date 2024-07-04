@@ -78,10 +78,10 @@ export default {
   async mounted() {
     console.log("mounted");
 
-    await axios.get("courses/get_categories/").then((response) => {
+    await axios.get("courses/categories/").then((response) => {
       console.log(response.data);
 
-      this.categories = response.data;
+      this.categories = response.data.data;
     });
 
     this.getCourses();
@@ -105,14 +105,14 @@ export default {
       let url = "courses/";
 
       if (this.activeCategory) {
-        url += "?category_id=" + this.activeCategory.id;
+        url += `?cat_slug=${this.activeCategory.slug}`;
       }
 
       axios.get(url).then((response) => {
         console.log(response.data);
 
-        this.courses = response.data;
-        this.totalCourses = response.data.length;
+        this.courses = response.data.data;
+        this.totalCourses = response.data.data.length;
       });
     },
     handlePageChanged(page) {

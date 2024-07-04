@@ -11,7 +11,7 @@
         <div class="column"></div>
       </div>
       <div class="mb-2 has-text-centered">
-        <h1 class="title is-4">Add User</h1>
+        <h1 class="title is-4">Create User</h1>
       </div>
     </div>
     <section class="section">

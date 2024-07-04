@@ -75,11 +75,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="user in users"
-                :key="user.id"
-                @click="editUser(user.id)"
-              >
+              <tr v-for="user in users" :key="user.id" @click="editUser(user.id)">
                 <td>{{ user.first_name }} {{ user.last_name }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ getRole(user) }}</td>
@@ -123,12 +119,12 @@ export default {
       }
     },
     computeRoleCounts() {
-      this.adminCount = this.users.filter((user) => user.is_superuser).length;
+      this.adminCount = this.users.filter((user) => user.is_admin).length;
       this.teacherCount = this.users.filter((user) => user.is_teacher).length;
       this.studentCount = this.users.filter((user) => user.is_student).length;
     },
     getRole(user) {
-      if (user.is_superuser) return "Admin";
+      if (user.is_admin) return "Admin";
       if (user.is_teacher) return "Teacher";
       if (user.is_student) return "Student";
       return "User";

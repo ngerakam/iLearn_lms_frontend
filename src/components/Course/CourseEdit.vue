@@ -6,12 +6,7 @@
           <div class="field">
             <label class="label">Title</label>
             <div class="control">
-              <input
-                class="input"
-                type="text"
-                v-model="course.title"
-                required
-              />
+              <input class="input" type="text" v-model="course.title" required />
             </div>
           </div>
           <div class="field">
@@ -62,19 +57,13 @@
                 </span>
                 <span class="file-label"> Course image… </span>
               </span>
-              <span class="file-name" v-if="course.image">{{
-                course.image.name
-              }}</span>
+              <span class="file-name" v-if="course.image">{{ course.image.name }}</span>
             </label>
           </div>
           <div class="field">
             <label class="label">Status</label>
             <div class="control">
-              <label
-                class="radio"
-                v-for="(status, index) in statuses"
-                :key="index"
-              >
+              <label class="radio" v-for="(status, index) in statuses" :key="index">
                 <input type="radio" v-model="course.status" :value="status" />
                 {{ status }}
               </label>
@@ -147,13 +136,10 @@ export default {
       await axios.get(`courses/${slug}/status/`).then((response) => {
         console.log(response.data);
 
-        this.course = response.data.course;
+        this.course = response.data.data;
         this.lessons = response.data.lessons;
         this.course.categories = this.course.categories.map((cat) => cat.id);
-        console.log(
-          "Course categories mapped to IDs: ",
-          this.course.categories
-        );
+        console.log("Course categories mapped to IDs: ", this.course.categories);
       });
     },
     async updateCourse() {
@@ -172,7 +158,7 @@ export default {
         }
 
         const slug = this.$router.currentRoute.value.params.slug;
-        await axios.put(`/courses/${slug}/update/`, formData, {
+        await axios.put(`/courses/${slug}/`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

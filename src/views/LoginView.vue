@@ -39,8 +39,8 @@
               <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
             </div>
             <hr />
-            Or contact the site admin({{ siteSetup?.addresses?.email_contact }})
-            for registration!
+            Or contact the site admin({{ siteSetup?.addresses?.email_contact }}) for
+            registration!
           </div>
         </div>
       </div>
@@ -103,8 +103,7 @@ export default {
 
           this.$store.commit("setToken", tokens);
 
-          axios.defaults.headers.common["Authorization"] =
-            "Bearer " + tokens.access;
+          axios.defaults.headers.common["Authorization"] = "Bearer " + tokens.access;
 
           localStorage.setItem("access_token", tokens.access);
           localStorage.setItem("refresh_token", tokens.refresh);
@@ -112,7 +111,7 @@ export default {
           // Fetch user details
           await this.$store.dispatch("userDetails/fetchUserDetails");
 
-          this.$router.push("/dashboard/home");
+          this.$router.push("/dashboard/");
         } catch (error) {
           if (error.response) {
             for (const property in error.response.data) {

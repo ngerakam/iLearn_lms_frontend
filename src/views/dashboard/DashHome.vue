@@ -21,9 +21,7 @@
         <h2 class="subtitle is-size-6">{{ activeClass }}</h2>
         <!-- Enrolled Courses Tab -->
         <div v-if="activeClass === 'Enrolled Courses'">
-          <div v-if="enrolled_courses.length === 0">
-            No enrolled courses found.
-          </div>
+          <div v-if="enrolled_courses.length === 0">No enrolled courses found.</div>
           <div v-else class="columns is-multiline">
             <div
               class="column is-3"
@@ -72,10 +70,7 @@
             <div class="column"></div>
             <div class="column"></div>
             <div class="column">
-              <router-link
-                to="/dashboard/create-course"
-                class="button is-primary"
-              >
+              <router-link to="/dashboard/create-course" class="button is-primary">
                 <i class="fas fa-plus icon-spaced"></i>
                 Create Course
               </router-link>
@@ -88,10 +83,7 @@
               v-for="course in paginatedOwnCourses"
               :key="course.id"
             >
-              <CourseItemStatus
-                :course="course"
-                @click="handleCourseEdit(course.slug)"
-              />
+              <CourseItemStatus :course="course" @click="handleCourseEdit(course.slug)" />
             </div>
           </div>
           <div class="column is-7 mx-auto">
@@ -132,9 +124,7 @@
 
         <!-- Unpublished Courses Tab -->
         <div v-if="activeClass === 'Unpublished Courses'">
-          <div v-if="unpub_courses.length === 0">
-            No unpublished courses found.
-          </div>
+          <div v-if="unpub_courses.length === 0">No unpublished courses found.</div>
           <div v-else class="columns is-multiline">
             <div
               class="column is-3"
@@ -258,7 +248,7 @@ export default {
         ];
       }
 
-      if (userRoles?.is_superuser) {
+      if (userRoles?.is_admin) {
         tabs = [
           "User Management",
           "Website Management",
@@ -305,28 +295,28 @@ export default {
   },
   methods: {
     getDoneCourses() {
-      axios.get("activities/get_my_completed_courses/").then((response) => {
-        this.completed_courses = response.data;
+      axios.get("activities/courses/completed/").then((response) => {
+        this.completed_courses = response.data.data;
       });
     },
     getAllCourses() {
       axios.get("courses").then((response) => {
-        this.all_courses = response.data;
+        this.all_courses = response.data.data;
       });
     },
     getEnrolledCourses() {
-      axios.get("activities/get_my_registered_courses/").then((response) => {
-        this.enrolled_courses = response.data.courses;
+      axios.get("activities/courses/enrolled/").then((response) => {
+        this.enrolled_courses = response.data.data;
       });
     },
     getOwnCourses() {
-      axios.get("activities/get_my_created_courses/").then((response) => {
-        this.own_courses = response.data;
+      axios.get("activities/courses/created/").then((response) => {
+        this.own_courses = response.data.data;
       });
     },
     getUnpublishedCourses() {
-      axios.get("activities/get_my_unpublished_courses/").then((response) => {
-        this.unpub_courses = response.data;
+      axios.get("activities/courses/unpublished/").then((response) => {
+        this.unpub_courses = response.data.data;
       });
     },
     setActiveClass(tabName) {
@@ -339,9 +329,16 @@ export default {
       });
     },
     paginate(items, currentPage) {
+      if (!Array.isArray(items)) {
+        console.error("Expected an array but got:", items);
+        return [];
+      }
       const start = (currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
       return items.slice(start, end);
+    },
+    handlePageChanged(type, page) {
+      this.currentPage[type] = page;
     },
     handlePageChanged(type, page) {
       this.currentPage[type] = page;

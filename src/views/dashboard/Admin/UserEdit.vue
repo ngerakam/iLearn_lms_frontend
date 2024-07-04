@@ -55,19 +55,11 @@
             Admin
           </label>
           <label class="checkbox">
-            <input
-              class="mr-2 ml-2"
-              type="checkbox"
-              v-model="userRoles.teacher"
-            />
+            <input class="mr-2 ml-2" type="checkbox" v-model="userRoles.teacher" />
             Teacher
           </label>
           <label class="checkbox">
-            <input
-              class="mr-2 ml-2"
-              type="checkbox"
-              v-model="userRoles.student"
-            />
+            <input class="mr-2 ml-2" type="checkbox" v-model="userRoles.student" />
             Student
           </label>
         </div>
@@ -117,7 +109,7 @@ export default {
       try {
         const response = await axios.get(`authentication/user/${id}/`);
         this.user = response.data;
-        this.userRoles.admin = this.user.is_superuser;
+        this.userRoles.admin = this.user.is_admin;
         this.userRoles.teacher = this.user.is_teacher;
         this.userRoles.student = this.user.is_student;
       } catch (error) {
@@ -146,13 +138,11 @@ export default {
     },
     async handleDelete() {
       const id = this.$route.params.id;
-      await axios
-        .delete(`authentication/user/${id}/delete/`)
-        .then((response) => {
-          if (response.data.message) {
-            // console.log(response.data);
-          }
-        });
+      await axios.delete(`authentication/user/${id}/delete/`).then((response) => {
+        if (response.data.message) {
+          // console.log(response.data);
+        }
+      });
     },
   },
 };
