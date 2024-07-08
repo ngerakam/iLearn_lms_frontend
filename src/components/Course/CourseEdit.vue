@@ -29,18 +29,36 @@
               ></textarea>
             </div>
           </div>
-          <div class="field">
-            <label class="label">Choose category</label>
-            <div class="select is-multiple">
-              <select multiple size="3" v-model="course.categories">
-                <option
-                  v-for="category in categories"
-                  :key="category.id"
-                  :value="category.id"
+          <div class="columns">
+            <div class="column">
+              <div class="field">
+                <label class="label">Choose category</label>
+                <div class="select is-multiple">
+                  <select multiple size="3" v-model="course.categories">
+                    <option
+                      v-for="category in categories"
+                      v-bind:key="category.id"
+                      v-bind:value="category.id"
+                    >
+                      {{ category.title }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="column">
+              <div class="field mt-3">
+                <label class="label">Add category</label>
+                <button
+                  class="button is-secondary"
+                  type="button"
+                  @click="openCategoryModal"
                 >
-                  {{ category.title }}
-                </option>
-              </select>
+                  <span class="icon">
+                    <i class="fas fa-plus"></i>
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
           <div class="file has-name">
@@ -85,12 +103,14 @@
           </div>
         </form>
       </div>
+      <CategoryModal ref="categoryModal" @category-added="updateCategories" />
     </section>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import CategoryModal from "@/components/Categories/CategoryModal.vue";
 
 export default {
   props: {
@@ -113,6 +133,9 @@ export default {
       statuses: ["published", "draft", "in_review"],
     };
   },
+  components: {
+    CategoryModal,
+  },
   async mounted() {
     await this.getCategories();
     await this.getCourse();
@@ -123,8 +146,8 @@ export default {
     },
     async getCategories() {
       try {
-        const response = await axios.get("courses/get_categories/");
-        this.categories = response.data;
+        const response = await axios.get("courses/categories/");
+        this.categories = response.data.data;
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -171,7 +194,21 @@ export default {
       }
     },
     async handleDelete() {
-      console.log("delete course: ", this.course.title);
+      const slug = this.$router.currentRoute.value.params.slug;
+      await axios.delete(`/courses/${slug}/`).then((response) => {
+        if (response.status === 200) {
+          console.log(reponse.data.data);
+        }
+      });
+      console.log("deleted course: ", this.course);
+    },
+    openCategoryModal() {
+      this.$refs.categoryModal.openModal();
+    },
+    async updateCategories(category) {
+      console.log(category.data, "category data");
+      await this.getCategories();
+      this.course.categories.push(category.data.id);
     },
   },
 };

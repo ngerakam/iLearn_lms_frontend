@@ -4,21 +4,26 @@ import AboutView from "../views/AboutView.vue";
 import SignUpView from "@/views/SignUpView.vue";
 import LoginView from "@/views/LoginView.vue";
 import CoursesView from "@/views/CoursesView.vue";
-import CourseView from "@/views/CourseView.vue";
 import AuthorView from "@/views/AuthorView.vue";
 
 // Dashboard
 import MyAccountView from "@/views/dashboard/MyAccountView.vue";
 import DashHome from "@/views/dashboard/DashHome.vue";
+// Admin
+import UserEdit from "@/views/dashboard/Admin/UserEdit.vue";
 // Teacher
 import TeacherCourseActivities from "@/views/dashboard/Teacher/TeacherCourseActivities.vue";
 import TeacherCompletedCourses from "@/views/dashboard/Teacher/TeacherCompletedCourses.vue";
+import CourseTeacherView from "@/views/dashboard/Teacher/Course/CourseTeacherView.vue";
 import CreateCourse from "@/views/dashboard/Teacher/Course/CreateCourse.vue";
-import CourseCreateDetails from "@/views/dashboard/Teacher/Course/CourseCreateDetails.vue";
 import CourseEditPage from "@/views/dashboard/Teacher/Course/CourseEditPage.vue";
+import CreateModule from "@/views/dashboard/Teacher/Module/CreateModule.vue";
+import ModuleEditPage from "@/views/dashboard/Teacher/Module/ModuleEditPage.vue";
+import LessonCreateDetails from "@/views/dashboard/Teacher/Lesson/LessonCreateDetails.vue";
 import EditLessonPage from "@/views/dashboard/Teacher/Lesson/EditLessonPage.vue";
-// Admin
-import UserEdit from "@/views/dashboard/Admin/UserEdit.vue";
+// Student
+import CourseView from "@/views/dashboard/Student/Course/CourseView.vue";
+import ModuleView from "@/views/dashboard/Student/Course/Module/ModuleView.vue";
 
 const routes = [
   {
@@ -38,14 +43,19 @@ const routes = [
     component: LoginView,
   },
   {
-    path: "/courses",
+    path: "/courses/",
     name: "Courses",
     component: CoursesView,
   },
   {
-    path: "/courses/:slug",
+    path: "/courses/:slug/",
     name: "Course",
     component: CourseView,
+  },
+  {
+    path: "/courses/:slug/modules/",
+    name: "ModuleView",
+    component: ModuleView,
   },
   {
     path: "/authors/:id",
@@ -78,17 +88,27 @@ const routes = [
     component: CreateCourse,
   },
   {
-    path: "/dashboard/create-course/:slug/",
-    name: "CourseCreateDetails",
-    component: CourseCreateDetails,
+    path: "/dashboard/create-course/:slug/module/",
+    name: "CreateModule",
+    component: CreateModule,
   },
   {
-    path: "/dashboard/edit-course/:slug/",
+    path: "/dashboard/create-course/:slug/module/:moduleSlug/",
+    name: "LessonCreateDetails",
+    component: LessonCreateDetails,
+  },
+  {
+    path: "/dashboard/edit-course/:slug/modules/",
     name: "CourseEditPage",
     component: CourseEditPage,
   },
   {
-    path: "/dashboard/edit-course/:courseSlug/edit-lesson/:lessonSlug/",
+    path: "/dashboard/edit-course/:slug/modules/:moduleSlug/",
+    name: "ModuleEditPage",
+    component: ModuleEditPage,
+  },
+  {
+    path: "/dashboard/edit-course/:slug/modules/:moduleSlug/lessons/:lessonSlug/",
     name: "EditLessonPage",
     component: EditLessonPage,
   },

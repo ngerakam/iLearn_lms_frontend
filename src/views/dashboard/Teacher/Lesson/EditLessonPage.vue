@@ -49,14 +49,15 @@ export default {
       this.$router.back();
     },
     async getLesson() {
-      const courseSlug = this.$router.currentRoute.value.params.courseSlug;
+      const slug = this.$router.currentRoute.value.params.slug;
+      const moduleSlug = this.$router.currentRoute.value.params.moduleSlug;
       const lessonSlug = this.$router.currentRoute.value.params.lessonSlug;
-      console.log("Course slug", courseSlug);
-      console.log("Lesson slug", lessonSlug);
-      await axios.get(`courses/${courseSlug}/lessons/${lessonSlug}/`).then((response) => {
-        console.log(response.data);
-        this.lesson = response.data;
-      });
+      await axios
+        .get(`courses/${slug}/modules/${moduleSlug}/lessons/${lessonSlug}/`)
+        .then((response) => {
+          console.log(response.data);
+          this.lesson = response.data.data;
+        });
     },
   },
 };

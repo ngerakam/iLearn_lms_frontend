@@ -46,7 +46,11 @@
 
           <hr />
 
-          <div class="column is-3 mt-3" v-for="course in courses" :key="course.id">
+          <div
+            class="column is-3 mt-3"
+            v-for="course in courses"
+            :key="course.id"
+          >
             <CourseItem :course="course" />
           </div>
         </div>
@@ -75,10 +79,10 @@ export default {
       siteSetup: (state) => state.siteSetup.siteSetup,
     }),
   },
-  mounted() {
+  async mounted() {
     console.log("mounted");
 
-    axios.get("activities/courses/frontpage/").then((response) => {
+    await axios.get("activities/courses/frontpage/").then((response) => {
       console.log(response.data);
 
       this.courses = response.data.data;

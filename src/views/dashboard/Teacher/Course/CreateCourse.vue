@@ -122,7 +122,7 @@
         </section>
       </div>
     </div>
-    <CategoryModal ref="categoryModal" />
+    <CategoryModal ref="categoryModal" @category-added="updateCategories" />
   </div>
 </template>
 
@@ -152,10 +152,9 @@ export default {
   },
   methods: {
     async getCategories() {
-      console.log("categories");
+      // console.log("categories");
       await axios.get("courses/categories/").then((response) => {
         // console.log(response.data);
-
         this.categories = response.data.data;
       });
     },
@@ -166,9 +165,9 @@ export default {
       this.form.image = event.target.files[0];
     },
     async submitForm(status) {
-      console.log("submit form");
+      // console.log("submit form");
 
-      console.log(this.form);
+      // console.log(this.form);
 
       this.form.status = status;
 
@@ -181,7 +180,7 @@ export default {
         .then((response) => {
           // console.log(response.data);
           const slug = response.data.data.slug;
-          this.$router.push({ name: "CourseCreateDetails", params: { slug } });
+          this.$router.push({ name: "CreateModule", params: { slug } });
         })
         .catch((error) => {
           console.log("error: ", error);
@@ -189,6 +188,10 @@ export default {
     },
     openCategoryModal() {
       this.$refs.categoryModal.openModal();
+    },
+    async updateCategories(category) {
+      await this.getCategories();
+      this.course.categories.push(category.data.id);
     },
   },
 };

@@ -190,7 +190,7 @@ export default {
     };
   },
   components: {
-    CreateQuestion,
+    // CreateQuestion,
   },
   computed: {
     isVideo() {
@@ -265,18 +265,17 @@ export default {
 
       this.validateForm();
 
+      const slug = this.$router.currentRoute.value.params.courseSlug;
+      const moduleSlug = this.$router.currentRoute.value.params.moduleSlug;
+
       axios
-        .post(
-          `courses/create-course/${this.$router.currentRoute.value.params.slug}/create-lesson/`,
-          this.form,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        )
+        .post(`courses/${slug}/modules/${moduleSlug}/lessons/`, this.form, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
         .then((response) => {
-          console.log(response.data);
+          // console.log(response.data);
           this.$emit("lesson-created");
         })
         .catch((error) => {

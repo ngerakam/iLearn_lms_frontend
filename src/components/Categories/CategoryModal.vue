@@ -33,6 +33,7 @@ export default {
       this.showModal = false;
     },
     handleCategoryAdded(category) {
+      this.$emit("category-added", category);
       console.log("Category added:", category);
       this.closeModal();
     },

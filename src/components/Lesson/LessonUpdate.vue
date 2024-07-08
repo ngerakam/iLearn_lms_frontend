@@ -9,12 +9,7 @@
         <div class="field">
           <label class="label">Title</label>
           <div class="control">
-            <input
-              class="input"
-              type="text"
-              placeholder="Title"
-              v-model="form.title"
-            />
+            <input class="input" type="text" placeholder="Title" v-model="form.title" />
           </div>
         </div>
         <div class="field">
@@ -245,9 +240,7 @@ export default {
         this.errors.push("Title is required.");
       }
       if (this.isArticle && !this.form.long_description) {
-        this.errors.push(
-          "Long and Short description is required for articles."
-        );
+        this.errors.push("Long and Short description is required for articles.");
       }
       if (this.isVideo) {
         if (!this.form.youtube_id && !this.form.video) {
@@ -256,9 +249,7 @@ export default {
           );
         }
         if (this.form.youtube_id && this.form.video) {
-          this.errors.push(
-            "Please provide either Youtube ID or video file, not both."
-          );
+          this.errors.push("Please provide either Youtube ID or video file, not both.");
         }
       }
       if (this.isFile && !this.form.document) {
@@ -280,11 +271,12 @@ export default {
 
       this.validateForm();
 
-      const courseSlug = this.$router.currentRoute.value.params.courseSlug;
+      const slug = this.$router.currentRoute.value.params.slug;
+      const moduleSlug = this.$router.currentRoute.value.params.moduleSlug;
       const lessonSlug = this.$router.currentRoute.value.params.lessonSlug;
 
       axios
-        .put(`courses/${courseSlug}/lessons/${lessonSlug}/update/`, this.form, {
+        .put(`courses/${slug}/modules/${moduleSlug}/lessons/${lessonSlug}/`, this.form, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -299,15 +291,16 @@ export default {
         });
     },
     async handleDelete() {
-      const courseSlug = this.$router.currentRoute.value.params.courseSlug;
+      const slug = this.$router.currentRoute.value.params.slug;
+      const moduleSlug = this.$router.currentRoute.value.params.moduleSlug;
       const lessonSlug = this.$router.currentRoute.value.params.lessonSlug;
 
       axios
-        .delete(`courses/${courseSlug}/lessons/${lessonSlug}/delete/`)
+        .delete(`courses/${slug}/modules/${moduleSlug}/lessons/${lessonSlug}/`)
         .then((response) => {
-          if (response.data.message) {
-            console.log(response.data);
-            // this.$router.back();
+          if (response.status === 202) {
+            // console.log(response.data);
+            this.$router.back();
           }
         })
         .catch((error) => {

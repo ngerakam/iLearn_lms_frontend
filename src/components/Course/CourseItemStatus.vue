@@ -15,7 +15,9 @@
       <div class="content">
         <div class="columns">
           <div class="column">
-            <span class="tag is-text" v-if="course.status == 'draft'"> Draft </span>
+            <span class="tag is-text" v-if="course.status == 'draft'">
+              Draft
+            </span>
             <span class="tag is-link" v-if="course.status == 'published'">
               Published
             </span>
@@ -30,7 +32,9 @@
         <router-link
           class="button is-success"
           :to="{ name: 'CourseEditPage', params: { slug: course.slug } }"
-          >Edit</router-link
+        >
+          <i class="far fa-edit icon-spaced"></i>
+          Edit</router-link
         >
       </div>
     </div>
@@ -42,3 +46,8 @@ export default {
   props: ["course"],
 };
 </script>
+<style scoped>
+.icon-spaced {
+  margin-right: 8px;
+}
+</style>
