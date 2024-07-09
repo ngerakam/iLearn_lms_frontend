@@ -1,73 +1,54 @@
 <template>
   <div>
-    <div class="notification is-success mt-3 mb-3" v-if="final_score == !null">
-      <button class="delete" @click="removeNotif()"></button>
-      Here is your final score: {{ final_score }}
-    </div>
     <div class="columns">
       <div class="column">
-        <h2>{{ activeLesson.title }}</h2>
+        <h2>{{ lesson?.title }}</h2>
       </div>
+      <div class="column"></div>
       <div class="column">
-        <template v-if="activeLesson?.lesson_type === 'quiz'">
-          Score: {{ totalScore }} / {{ numQuiz }}
-        </template>
-      </div>
-      <div class="column">
-        <span class="tag is-warning" v-if="activity.status == 'started'">
+        <span class="tag is-warning" v-if="lessonActivity?.status == 'started'">
           Started (mark as done)
         </span>
-        <span class="tag is-success" v-else> Done </span>
+        <span class="tag is-success" v-else-if="lessonActivity?.status == 'done'">
+          Done
+        </span>
       </div>
     </div>
 
     <hr />
-    <div v-if="activeLesson.long_description">
+    <div v-if="lesson?.long_description">
       <article class="message">
         <div class="message-body">
-          {{ activeLesson.long_description }}
+          {{ lesson?.long_description }}
         </div>
       </article>
 
       <hr />
     </div>
 
-    <template v-if="activeLesson.lesson_type === 'quiz'">
-      <div v-if="quizList.length > 0">
-        <div v-for="(quiz, index) in quizList" v-bind:key="index">
-          <Quiz v-bind:quiz="quiz" @quiz-result="handleQuizResult(quiz, $event)" />
-          <hr />
-        </div>
-        <div class="field ml-auto mb-2">
-          <div class="control">
-            <button class="button is-primary" @click="submitQuizResults">
-              Submit Results
-            </button>
-          </div>
-        </div>
-      </div>
+    <template v-if="lesson?.lesson_type === 'quiz'">
+      <p>Quiz</p>
     </template>
 
-    <!-- divider -->
-    <template v-if="activeLesson.lesson_type === 'video'">
+    <template v-if="lesson?.lesson_type === 'video'">
       <article class="message">
         <div class="message-body">
-          {{ activeLesson.short_description }}
+          {{ lesson?.short_description }}
         </div>
       </article>
-      <div v-if="activeLesson.youtube_id !== null">
-        <Video v-bind:youtube_id="activeLesson.youtube_id" />
+      <div v-if="lesson?.youtube_id !== null">
+        <Video v-bind:youtube_id="lesson?.youtube_id" />
       </div>
       <div v-else>
         custom video component
         <MyCustomVideo
-          v-bind:videoUrl="activeLesson.get_video"
-          v-bind:videoType="getVideoType(activeLesson.get_video)"
+          v-bind:videoUrl="lesson?.get_video"
+          v-bind:videoType="getVideoType(lesson?.get_video)"
         />
       </div>
     </template>
-    <!-- divider -->
-    <template v-if="activeLesson.lesson_type === 'article'">
+
+    <template v-if="lesson?.lesson_type === 'article'">
       <p>Add a Comment</p>
       <CourseComment
         v-for="comment in comments"
@@ -75,96 +56,20 @@
         v-bind:comment="comment"
       />
 
-      <AddComment
-        v-bind:course="course"
-        v-bind:activeLesson="activeLesson"
-        v-on:submitComment="submitComment"
-      />
+      <AddComment v-bind:lesson="lesson" v-on:submitComment="submitComment" />
     </template>
-    <template v-if="activeLesson.lesson_type === 'file'">
-      <div v-if="['docx'].includes(getFileType(activeLesson.get_file))">
-        <MyCustomDoc :fileUrl="activeLesson.get_file" />
-      </div>
-      <div v-if="getFileType(activeLesson.get_file) === 'pptx'">
-        <div class="columns">
-          <div class="column"></div>
-          <div class="column"></div>
-          <div class="column">
-            <!-- Finish Course Button -->
-            <div v-if="activeLesson && isLastLesson" class="column is-12 mt-5">
-              <template
-                v-if="
-                  courseActivity &&
-                  courseActivity.course_status &&
-                  courseActivity.course_status.status === 'done'
-                "
-              >
-                <span class="tag is-success" @click="handleComplete"> Completed </span>
-              </template>
-              <template v-else>
-                <button class="button is-primary" @click="finishCourse">
-                  Finish Course
-                </button>
-              </template>
-            </div>
-            <div class="column is-12" v-else>
-              <nav class="pagination">
-                <a class="pagination-previous" @click="previousLesson">Previous</a>
-                <a class="pagination-next" @click="nextLesson">Next</a>
-              </nav>
-            </div>
-          </div>
-        </div>
-        <MyCustomPptViewer :fileUrl="activeLesson.get_file" />
-      </div>
-      <div v-if="getFileType(activeLesson.get_file) === 'pdf'">
-        <MyDocPreview :pdfUrl="activeLesson.get_file" />
-      </div>
-    </template>
-    <template v-if="activeLesson && !isLastLesson">
-      <div
-        v-if="
-          activeLesson &&
-          activeLesson.lesson_type === 'file' &&
-          getFileType(activeLesson.get_file) === 'pptx'
-        "
-      ></div>
-      <div class="column is-12" v-else>
-        <nav class="pagination">
-          <a class="pagination-previous" @click="previousLesson">Previous</a>
-          <a class="pagination-next" @click="nextLesson">Next</a>
-        </nav>
-      </div>
-    </template>
-    <div
-      v-if="
-        activeLesson &&
-        activeLesson.lesson_type === 'file' &&
-        getFileType(activeLesson.get_file) === 'pptx'
-      "
-    ></div>
 
-    <div class="columns" v-else>
-      <div class="column"></div>
-      <div class="column"></div>
-      <div class="column">
-        <!-- Finish Course Button -->
-        <div v-if="activeLesson && isLastLesson" class="column is-12 mt-5">
-          <template
-            v-if="
-              courseActivity &&
-              courseActivity.course_status &&
-              courseActivity.course_status.status === 'done'
-            "
-          >
-            <span class="tag is-success" @click="handleComplete"> Completed </span>
-          </template>
-          <template v-else>
-            <button class="button is-primary" @click="finishCourse">Finish Course</button>
-          </template>
-        </div>
+    <template v-if="lesson?.lesson_type === 'file'">
+      <div v-if="['docx'].includes(getFileType(lesson?.get_file))">
+        <MyCustomDoc :fileUrl="lesson?.get_file" />
       </div>
-    </div>
+      <div v-if="getFileType(lesson?.get_file) === 'pptx'">
+        <MyCustomPptViewer :fileUrl="lesson?.get_file" />
+      </div>
+      <div v-if="getFileType(lesson?.get_file) === 'pdf'">
+        <MyDocPreview :pdfUrl="lesson?.get_file" />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -178,7 +83,23 @@ import MyCustomVideo from "@/components/Course/MyCustomVideo";
 import MyCustomDoc from "@/components/Course/MyCustomDoc";
 import MyCustomPptViewer from "@/components/Course/MyCustomPptViewer";
 import "video.js/dist/video-js.css";
+
 export default {
+  props: {
+    lesson: {
+      type: Object,
+      required: true,
+    },
+    lessonActivity: {
+      type: Object,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      comments: [],
+    };
+  },
   components: {
     CourseComment,
     AddComment,
@@ -188,6 +109,22 @@ export default {
     MyCustomVideo,
     MyCustomDoc,
     MyCustomPptViewer,
+  },
+  methods: {
+    getFileType(FileUrl) {
+      if (!FileUrl) return "";
+      const FileType = FileUrl.split(".").pop();
+      return FileType.toLowerCase();
+    },
+    getVideoType(videoUrl) {
+      if (!videoUrl) return "";
+      const videoType = videoUrl.split(".").pop();
+      return videoType.toLowerCase();
+    },
+    submitComment(comment) {
+      console.log("Submitting comment:", comment);
+      // Implement your comment submission logic here
+    },
   },
 };
 </script>

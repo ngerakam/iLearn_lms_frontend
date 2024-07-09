@@ -10,15 +10,15 @@
         <div class="column"></div>
         <div class="column"></div>
       </div>
-      <h1 class="title is-3">{{ course.title }}</h1>
+      <h1 class="title is-3">{{ course?.title }}</h1>
       <div class="columns">
         <div class="column">
-          <img :src="course.get_image" alt="Course Image" style="max-width: 300px" />
+          <img :src="course?.get_image" alt="Course Image" style="max-width: 300px" />
         </div>
         <div class="column"></div>
         <div class="column">
           <h2>Course Description</h2>
-          <p>{{ course.short_description }}</p>
+          <p>{{ course?.short_description }}</p>
         </div>
       </div>
 
@@ -27,7 +27,7 @@
           <table id="courseActivitiesTable" class="table is-bordered is-hoverable">
             <thead>
               <tr>
-                <th>Lesson Title</th>
+                <th>Module Title</th>
                 <th>Total Who Completed</th>
               </tr>
             </thead>
@@ -79,12 +79,11 @@ export default {
     async getCourseActivities() {
       const id = this.$route.params.id;
       try {
-        const response = await axios.get(
-          `/statistics/completed-course-activities/${id}/`
-        );
-        this.course = response.data.completed_courses.find(
-          (course) => course.course.id === parseInt(id)
-        ).course;
+        const response = await axios.get(`statistics/completed-course-activities/${id}/`);
+        this.course = response.data.modules[0].course;
+        // this.course = response.data.completed_courses.find(
+        //   (course) => course.course.id === parseInt(id)
+        // ).course;
         this.$nextTick(() => {
           $("#courseActivitiesTable").DataTable();
         });
@@ -93,6 +92,7 @@ export default {
         this.course = {};
       }
     },
+
     goBack() {
       this.$router.back();
     },

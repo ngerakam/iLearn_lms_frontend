@@ -12,7 +12,6 @@
       </div>
       <div class="has-text-centered">
         <h1 class="title">{{ course?.title }}</h1>
-
         <router-link
           :to="{ name: 'Author', params: { id: course?.created_by?.id } }"
           class="subtitle mb-3"
@@ -29,7 +28,7 @@
             <h2 class="title is-4">Table of Contents</h2>
             <p>Modules</p>
             <ul class="menu-list no-style">
-              <li v-for="module in modules" v-bind:key="module.id">
+              <li v-for="module in modules" :key="module.id">
                 <a :disabled="enrollmentValue === null">
                   <div v-if="!$store.state.user.isAuthenticated">
                     <i class="fas fa-lock"></i>
@@ -58,16 +57,24 @@
                     </div>
                   </div>
                   <div v-else>
-                    <!-- Start Learning Button -->
-                    <div v-if="startedValue === 'started'" class="column is-12">
+                    <div v-if="startedValue === null" class="column is-12">
                       <button class="button is-primary" @click="startLearning">
                         Start Learning
+                      </button>
+                    </div>
+                    <div v-if="startedValue === 'started'" class="column is-12">
+                      <button class="button is-primary" @click="continueLearning">
+                        Continue Learning
+                      </button>
+                    </div>
+                    <div v-if="startedValue === 'done'" class="column is-12">
+                      <button class="button is-link" @click="completedLearning">
+                        Completed
                       </button>
                     </div>
                   </div>
                 </div>
               </div>
-
               {{ course.long_description }}
             </template>
             <template v-else>
@@ -108,6 +115,7 @@ import { mapState } from "vuex";
 import axios from "axios";
 
 export default {
+  name: "CourseView",
   data() {
     return {
       course: {
@@ -127,61 +135,68 @@ export default {
     }),
   },
   async mounted() {
-    this.isCourseStarted();
-    this.verifyEnrollment();
-
-    const slug = this.$router.currentRoute.value.params.slug;
-
-    await axios.get(`courses/${slug}/no-auth`).then((response) => {
-      // console.log(response.data);
-      this.course = response.data.data;
-    });
-    await axios.get(`courses/${slug}/modules`).then((response) => {
-      // console.log(response.data);
-      this.modules = response.data.data;
-    });
-    document.title = this.course.title + " | iLearn";
+    try {
+      await this.fetchCourseData();
+      await this.verifyEnrollment();
+      await this.fetchCourseActivity();
+    } catch (error) {
+      console.error("Error initializing course view:", error);
+    }
   },
   methods: {
     goBack() {
       this.$router.back();
     },
-    verifyEnrollment() {
+    async fetchCourseData() {
       const slug = this.$router.currentRoute.value.params.slug;
-      axios
-        .get(`courses/${slug}/enrollments/`)
-        .then((response) => {
-          if (response.status === 200) {
-            this.enrollmentValue = response.data.data.status;
-          }
-        })
-        .catch((error) => {
-          console.error("Error verifying enrollment:", error);
-        });
+      try {
+        const [courseResponse, modulesResponse] = await Promise.all([
+          axios.get(`courses/${slug}/no-auth`),
+          axios.get(`courses/${slug}/modules`),
+        ]);
+        this.course = courseResponse.data.data;
+        this.modules = modulesResponse.data.data;
+        document.title = this.course.title + " | iLearn";
+      } catch (error) {
+        console.error("Error fetching course data:", error);
+      }
     },
-    submitEnrollment() {
+    async verifyEnrollment() {
+      const slug = this.$router.currentRoute.value.params.slug;
+      try {
+        const response = await axios.get(`courses/${slug}/enrollments/`);
+        this.enrollmentValue =
+          response.status === 200 && response.data.data.length > 0
+            ? response.data.data[0].status
+            : null;
+      } catch (error) {
+        console.error("Error verifying enrollment:", error);
+        this.enrollmentValue = null;
+      }
+    },
+    async submitEnrollment() {
       if (!this.$store.state.user.isAuthenticated) {
         this.$router.push("/log-in");
+        return;
       }
       const slug = this.$router.currentRoute.value.params.slug;
-      // console.log("Enroll button clicked");
-      axios.post(`courses/${slug}/enrollments/`).then((response) => {
-        // console.log(response.data);
+      try {
+        const response = await axios.post(`courses/${slug}/enrollments/`);
         this.enrollmentValue = "enrolled";
-      });
+      } catch (error) {
+        console.error("Error submitting enrollment:", error);
+      }
     },
-    isCourseStarted() {
+    async fetchCourseActivity() {
       const slug = this.$router.currentRoute.value.params.slug;
-      axios
-        .get(`activities/courses/${slug}/`)
-        .then((response) => {
-          if (response.status === 200) {
-            this.startedValue = response.data.data.status;
-          }
-        })
-        .catch((error) => {
-          console.error("Error verifying course started:", error);
-        });
+      try {
+        const response = await axios.get(`activities/courses/${slug}/`);
+        if (response.status === 200) {
+          this.startedValue = response.data.data.status;
+        }
+      } catch (error) {
+        console.error("Error fetching course activity:", error);
+      }
     },
     startLearning() {
       this.$router.push({
@@ -189,10 +204,19 @@ export default {
         params: { slug: this.course.slug },
       });
     },
+    continueLearning() {
+      this.$router.push({
+        name: "ModuleView",
+        params: { slug: this.course.slug },
+      });
+    },
+    completedLearning() {
+      this.$router.push("/dashboard/");
+    },
   },
 };
 </script>
-<!--  -->
+
 <style scoped>
 .icon-spaced {
   margin-right: 8px;
