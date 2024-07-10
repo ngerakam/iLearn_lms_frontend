@@ -10,15 +10,15 @@
         <div class="column"></div>
         <div class="column"></div>
       </div>
-      <h1 class="title is-3">{{ course?.title }}</h1>
+      <h1 class="title is-3">{{ course.title }}</h1>
       <div class="columns">
         <div class="column">
-          <img :src="course?.get_image" alt="Course Image" style="max-width: 300px" />
+          <img :src="course.get_image" alt="Course Image" style="max-width: 300px" />
         </div>
         <div class="column"></div>
         <div class="column">
           <h2>Course Description</h2>
-          <p>{{ course?.short_description }}</p>
+          <p>{{ course.short_description }}</p>
         </div>
       </div>
 
@@ -33,22 +33,22 @@
             </thead>
             <tbody>
               <tr
-                v-for="lesson in course.lessons"
-                :key="lesson.id"
+                v-for="module in course.modules"
+                :key="module.id"
                 :class="{
-                  'is-selected': selectedLesson && selectedLesson.id === lesson.id,
+                  'is-selected': selectedModule && selectedModule.id === module.id,
                 }"
-                @click="showLessonActivities(lesson)"
+                @click="showModuleActivities(module)"
               >
-                <td>{{ lesson.title }}</td>
-                <td>{{ countCompletedActivities(lesson.activities) }}</td>
+                <td>{{ module.title }}</td>
+                <td>{{ module.completed_users_count }}</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <div class="column" v-if="selectedLesson">
-          <CourseCompletionTable :lesson="selectedLesson" />
-        </div>
+        <!-- <div class="column" v-if="selectedModule">
+          <ModuleCompletionTable :module="selectedModule" />
+        </div> -->
       </div>
     </div>
   </div>
@@ -62,16 +62,16 @@ import axios from "axios";
 import $ from "jquery";
 import DataTable from "datatables.net-bm";
 import "datatables.net-bm/css/dataTables.bulma.css";
-import CourseCompletionTable from "./CourseCompletionTable.vue";
+import ModuleCompletionTable from "./ModuleCompletionTable.vue";
 
 export default {
   data() {
     return {
       course: null,
-      selectedLesson: null,
+      selectedModule: null,
     };
   },
-  components: { CourseCompletionTable },
+  components: { ModuleCompletionTable },
   mounted() {
     this.getCourseActivities();
   },
@@ -80,10 +80,7 @@ export default {
       const id = this.$route.params.id;
       try {
         const response = await axios.get(`statistics/completed-course-activities/${id}/`);
-        this.course = response.data.modules[0].course;
-        // this.course = response.data.completed_courses.find(
-        //   (course) => course.course.id === parseInt(id)
-        // ).course;
+        this.course = response.data.course;
         this.$nextTick(() => {
           $("#courseActivitiesTable").DataTable();
         });
@@ -96,22 +93,20 @@ export default {
     goBack() {
       this.$router.back();
     },
-    showLessonActivities(lesson) {
-      this.selectedLesson = lesson;
-      this.$nextTick(() => {
-        $("#lessonActivitiesTable").DataTable();
+    showModuleActivities(module) {
+      this.selectedModule = module;
+      this.$router.push({
+        name: "ModuleCompletionTable",
+        params: { id: this.course.id, modId: module.id },
       });
-    },
-    countCompletedActivities(activities) {
-      return activities.filter((activity) => activity.status === "done").length;
     },
   },
   beforeDestroy() {
     if ($.fn.dataTable.isDataTable("#courseActivitiesTable")) {
       $("#courseActivitiesTable").DataTable().destroy();
     }
-    if ($.fn.dataTable.isDataTable("#lessonActivitiesTable")) {
-      $("#lessonActivitiesTable").DataTable().destroy();
+    if ($.fn.dataTable.isDataTable("#moduleActivitiesTable")) {
+      $("#moduleActivitiesTable").DataTable().destroy();
     }
   },
 };
@@ -122,9 +117,8 @@ export default {
   margin-right: 8px;
 }
 
-/* Highlight selected lesson row */
 table#courseActivitiesTable tbody tr.is-selected {
-  background-color: rgb(180, 212, 223); /* Adjust the color as per your preference */
+  background-color: rgb(180, 212, 223);
   cursor: pointer;
 }
 </style>

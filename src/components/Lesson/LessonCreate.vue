@@ -29,7 +29,6 @@
               class="textarea"
               placeholder="Short description"
               v-model="form.short_description"
-              :disabled="isQuiz"
             ></textarea>
           </div>
         </div>
@@ -40,7 +39,7 @@
               class="textarea"
               placeholder="Long description"
               v-model="form.long_description"
-              :disabled="isFile || isVideo || isQuiz"
+              :disabled="isFile || isVideo"
             ></textarea>
           </div>
         </div>
@@ -71,7 +70,7 @@
                   type="text"
                   placeholder="Youtube Id: bT7uJwLfqmg"
                   v-model="form.youtube_id"
-                  :disabled="isArticle || isFile || form.video || isQuiz"
+                  :disabled="isArticle || isFile || form.video"
                 />
               </div>
             </div>
@@ -88,7 +87,7 @@
                 type="file"
                 name="video"
                 @change="handleVideoUpload"
-                :disabled="isArticle || isFile || form.youtube_id || isQuiz"
+                :disabled="isArticle || isFile || form.youtube_id"
               />
               <span class="file-cta">
                 <span class="file-icon">
@@ -112,7 +111,7 @@
                 type="file"
                 name="document"
                 @change="handleFileUpload"
-                :disabled="isArticle || isVideo || isQuiz"
+                :disabled="isArticle || isVideo"
               />
               <span class="file-cta">
                 <span class="file-icon">
@@ -126,27 +125,7 @@
             </label>
           </div>
         </div>
-        <div v-if="isQuiz">
-          <div class="columns">
-            <div class="column"></div>
-            <div class="column"></div>
-            <div class="column"></div>
-            <div class="column">
-              <button
-                class="button is-primary"
-                v-if="!isQuizCreateVisible"
-                @click="showQuizCreate"
-              >
-                <i class="fas fa-plus"></i>
-                Add Quiz
-              </button>
-            </div>
-          </div>
-          <CreateQuestion
-            v-if="isQuizCreateVisible"
-            @submit-quiz="handleQuizSubmission"
-          />
-        </div>
+
         <div class="field is-grouped">
           <div class="control">
             <button class="button is-success" @click="submitForm('draft')">
@@ -169,7 +148,6 @@
 
 <script>
 import axios from "axios";
-import CreateQuestion from "../Quiz/CreateQuestion.vue";
 
 export default {
   data() {
@@ -183,15 +161,12 @@ export default {
         document: null,
         lesson_type: "",
         status: "",
-        quizObject: [],
       },
-      isQuizCreateVisible: false,
+
       errors: [],
     };
   },
-  components: {
-    // CreateQuestion,
-  },
+
   computed: {
     isVideo() {
       return this.form.lesson_type === "video";
@@ -202,27 +177,16 @@ export default {
     isFile() {
       return this.form.lesson_type === "file";
     },
-    isQuiz() {
-      return this.form.lesson_type === "quiz";
-    },
   },
   methods: {
     removeNotif() {
       this.errors = [];
-    },
-    showQuizCreate() {
-      this.isQuizCreateVisible = !this.isQuizCreateVisible; // Toggle the visibility
     },
     handleFileUpload(event) {
       this.form.document = event.target.files[0];
     },
     handleVideoUpload(event) {
       this.form.video = event.target.files[0];
-    },
-    handleQuizSubmission(quizData) {
-      console.log("Quiz Data:", quizData);
-      this.isQuizCreateVisible = false;
-      this.form.quizObject.push(quizData);
     },
     validateForm() {
       this.errors = [];
@@ -265,7 +229,7 @@ export default {
 
       this.validateForm();
 
-      const slug = this.$router.currentRoute.value.params.courseSlug;
+      const slug = this.$router.currentRoute.value.params.slug;
       const moduleSlug = this.$router.currentRoute.value.params.moduleSlug;
 
       axios

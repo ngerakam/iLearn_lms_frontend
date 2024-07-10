@@ -86,6 +86,9 @@ export default {
     };
   },
   computed: {
+    isCurrentModuleOpen() {
+      return this.currentModule && this.currentModule.is_open;
+    },
     isLastLesson() {
       if (!this.lessons || this.lessons.length === 0) return true;
       const lastIndex = this.lessons.length - 1;
@@ -285,6 +288,7 @@ export default {
         });
         if (response.status === 200) {
           console.log("Module activity updated successfully.", response.data.data);
+          this.$router.push("/dashboard/");
         }
       } catch (error) {
         console.error("Error updating Course activity:", error);

@@ -1,8 +1,7 @@
-<!-- LessonActivities.vue -->
 <template>
   <div>
     <h3 class="title is-5">{{ lesson.title }}</h3>
-    <table class="table is-bordered is-hoverable">
+    <table id="lessonActivitiesTable" class="table is-bordered is-hoverable">
       <thead>
         <tr>
           <th>Student</th>
@@ -11,13 +10,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="activity in lesson.activities" :key="activity.id">
-          <td>
-            {{ activity.created_by.first_name }}
-            {{ activity.created_by.last_name }}
-          </td>
-          <td>{{ activity.status }}</td>
-          <td>{{ activity.created_at }}</td>
+        <tr v-for="user in lesson.completed_users" :key="user.created_by__id">
+          <td>{{ user.created_by__first_name }} {{ user.created_by__last_name }}</td>
+          <td>done</td>
+          <td>{{ user.created_at }}</td>
         </tr>
       </tbody>
     </table>

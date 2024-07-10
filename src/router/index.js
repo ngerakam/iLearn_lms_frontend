@@ -14,6 +14,8 @@ import UserEdit from "@/views/dashboard/Admin/UserEdit.vue";
 // Teacher
 import TeacherCourseActivities from "@/views/dashboard/Teacher/TeacherCourseActivities.vue";
 import TeacherCompletedCourses from "@/views/dashboard/Teacher/TeacherCompletedCourses.vue";
+import ModuleCompletionTable from "@/views/dashboard/Teacher/ModuleCompletionTable.vue";
+import ModuleActivities from "@/views/dashboard/Teacher/ModuleActivities.vue";
 import CourseTeacherView from "@/views/dashboard/Teacher/Course/CourseTeacherView.vue";
 import CreateCourse from "@/views/dashboard/Teacher/Course/CreateCourse.vue";
 import CourseEditPage from "@/views/dashboard/Teacher/Course/CourseEditPage.vue";
@@ -21,6 +23,8 @@ import CreateModule from "@/views/dashboard/Teacher/Module/CreateModule.vue";
 import ModuleEditPage from "@/views/dashboard/Teacher/Module/ModuleEditPage.vue";
 import LessonCreateDetails from "@/views/dashboard/Teacher/Lesson/LessonCreateDetails.vue";
 import EditLessonPage from "@/views/dashboard/Teacher/Lesson/EditLessonPage.vue";
+import QuizCreateView from "@/views/dashboard/Teacher/Quiz/QuizCreateView.vue";
+import QuestionCreateView from "@/views/dashboard/Teacher/Quiz/QuestionCreateView.vue";
 // Student
 import CourseView from "@/views/dashboard/Student/Course/CourseView.vue";
 import ModuleView from "@/views/dashboard/Student/Course/Module/ModuleView.vue";
@@ -93,6 +97,16 @@ const routes = [
     component: CreateModule,
   },
   {
+    path: "/dashboard/create-course/:slug/quiz/",
+    name: "QuizCreateView",
+    component: QuizCreateView,
+  },
+  {
+    path: "/dashboard/create-course/:slug/quiz/:quizSlug/",
+    name: "QuestionCreateView",
+    component: QuestionCreateView,
+  },
+  {
     path: "/dashboard/create-course/:slug/module/:moduleSlug/",
     name: "LessonCreateDetails",
     component: LessonCreateDetails,
@@ -118,9 +132,19 @@ const routes = [
     component: TeacherCourseActivities,
   },
   {
+    path: "/dashboard/course-activities/:id/modules/:modId",
+    name: "ModuleActivities",
+    component: ModuleActivities,
+  },
+  {
     path: "/dashboard/completed-course-activities/:id",
     name: "TeacherCompletedCourses",
     component: TeacherCompletedCourses,
+  },
+  {
+    path: "/dashboard/completed-course-activities/:id/modules/:modId",
+    name: "ModuleCompletionTable",
+    component: ModuleCompletionTable,
   },
 ];
 

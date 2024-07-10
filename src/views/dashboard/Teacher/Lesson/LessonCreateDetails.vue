@@ -43,10 +43,7 @@
                     v-if="lesson.lesson_type === 'video' && lesson.get_video !== null"
                     class="fas fa-video icon-spaced"
                   ></i>
-                  <i
-                    v-if="lesson.lesson_type === 'quiz'"
-                    class="fas fa-question icon-spaced"
-                  ></i>
+
                   <i
                     v-if="lesson.lesson_type === 'article'"
                     class="fas fa-newspaper icon-spaced"
@@ -61,16 +58,26 @@
               <div class="columns">
                 <div class="column"></div>
                 <div class="column"></div>
-                <div class="column"></div>
+
                 <div class="column">
-                  <button
-                    class="button is-primary"
-                    v-if="!isLessonCreateVisible"
-                    @click="showLessonCreate"
-                  >
-                    <i class="fas fa-plus icon-spaced"></i>
-                    Add Lesson
-                  </button>
+                  <div class="control buttons">
+                    <button
+                      class="button is-primary"
+                      v-if="!isQuizCreateVisible"
+                      @click="showQuizCreate"
+                    >
+                      <i class="fas fa-plus icon-spaced"></i>
+                      Add Quiz
+                    </button>
+                    <button
+                      class="button is-primary"
+                      v-if="!isLessonCreateVisible"
+                      @click="showLessonCreate"
+                    >
+                      <i class="fas fa-plus icon-spaced"></i>
+                      Add Lesson
+                    </button>
+                  </div>
                 </div>
               </div>
               <div class="container is-fullhd">
@@ -80,14 +87,6 @@
                   @lesson-created="refreshLessons"
                 />
               </div>
-            </template>
-            <template v-else>
-              <h2>Access Restricted</h2>
-              <p>You are required to login so as to access this course.</p>
-              <p>
-                If you do not have an account kindly reach out to site admin :
-                (example@siteadmin.com) for an account!
-              </p>
             </template>
           </div>
         </div>
@@ -114,6 +113,7 @@ export default {
       module_title: "",
       lessons: [],
       isLessonCreateVisible: false,
+      isQuizCreateVisible: false,
     };
   },
   async mounted() {
@@ -149,6 +149,10 @@ export default {
     },
     showLessonCreate() {
       this.isLessonCreateVisible = true;
+    },
+    showQuizCreate() {
+      const slug = this.$router.currentRoute.value.params.slug;
+      this.$router.push({ name: "QuizCreateView", params: { slug: slug } });
     },
     async refreshLessons() {
       const slug = this.$router.currentRoute.value.params.slug;

@@ -3,57 +3,36 @@
     <div class="field">
       <label class="label">Question</label>
       <div class="control">
-        <input
-          class="input"
-          type="text"
-          placeholder="Enter question"
-          v-model="form.question"
-        />
+        <textarea
+          class="textarea"
+          placeholder="Enter quiz description"
+          v-model="form.text"
+          required
+        ></textarea>
       </div>
     </div>
 
     <div class="field">
-      <label class="label">Option 1</label>
-      <div class="control">
-        <label class="radio">
-          <input type="radio" v-model="form.answer" :value="form.op1" />
-          is this anser correct?
-        </label>
-        <input
-          class="input"
-          type="text"
-          placeholder="Option 1"
-          v-model="form.op1"
-        />
+      <label class="label">Choose Question Type</label>
+      <div class="select is-primary">
+        <select v-model="form.question_type">
+          <option value="" disabled>Choose Question Type</option>
+          <option v-for="category in categories" :key="category" :value="category">
+            {{ category }}
+          </option>
+        </select>
       </div>
     </div>
+
     <div class="field">
-      <label class="label">Option 2</label>
+      <label class="label">Marks</label>
       <div class="control">
-        <label class="radio">
-          <input type="radio" v-model="form.answer" :value="form.op2" />
-          is this anser correct?
-        </label>
         <input
           class="input"
-          type="text"
-          placeholder="Option 2"
-          v-model="form.op2"
-        />
-      </div>
-    </div>
-    <div class="field">
-      <label class="label">Option 3</label>
-      <div class="control">
-        <label class="radio">
-          <input type="radio" v-model="form.answer" :value="form.op3" />
-          is this anser correct?
-        </label>
-        <input
-          class="input"
-          type="text"
-          placeholder="Option 3"
-          v-model="form.op3"
+          type="number"
+          placeholder="Enter pass mark"
+          v-model="form.marks"
+          required
         />
       </div>
     </div>
@@ -67,12 +46,11 @@ export default {
   data() {
     return {
       form: {
-        question: "",
-        op1: "",
-        op2: "",
-        op3: "",
-        answer: null,
+        text: "",
+        question_type: "",
+        marks: 0,
       },
+      categories: ["essay", "boolean", "multi-choice"],
     };
   },
   methods: {

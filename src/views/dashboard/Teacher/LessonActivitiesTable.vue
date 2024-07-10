@@ -11,13 +11,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="activity in lesson.activities" :key="activity.id">
+        <tr v-for="activity in lesson" :key="activity.id">
           <td>
-            {{ activity.created_by.first_name }}
-            {{ activity.created_by.last_name }}
+            {{ activity.completed_users[0].created_by.first_name }}
+            {{ activity.completed_users[0].created_by.last_name }}
           </td>
           <td>{{ activity.status }}</td>
-          <td>{{ activity.created_at }}</td>
+          <td>{{ activity.completed_users[0].created_at }}</td>
         </tr>
       </tbody>
     </table>

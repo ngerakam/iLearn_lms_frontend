@@ -27,27 +27,24 @@
           <table id="courseActivitiesTable" class="table is-bordered is-hoverable">
             <thead>
               <tr>
-                <th>Lesson Title</th>
-                <th>Total Lesson Activities</th>
+                <th>Module Title</th>
+                <th>Total Module Activities</th>
               </tr>
             </thead>
             <tbody>
               <tr
-                v-for="lesson in course.lessons"
-                :key="lesson.id"
+                v-for="module in course.modules"
+                :key="module.id"
                 :class="{
-                  'is-selected': selectedLesson && selectedLesson.id === lesson.id,
+                  'is-selected': selectedLesson && selectedLesson.id === module.id,
                 }"
-                @click="showLessonActivities(lesson)"
+                @click="showLessonActivities(module)"
               >
-                <td>{{ lesson.title }}</td>
-                <td>{{ lesson.activities.length }}</td>
+                <td>{{ module.title }}</td>
+                <td>{{ module.completed_users_count }}</td>
               </tr>
             </tbody>
           </table>
-        </div>
-        <div class="column" v-if="selectedLesson">
-          <LessonActivitiesTable :lesson="selectedLesson" />
         </div>
       </div>
     </div>
@@ -92,10 +89,11 @@ export default {
     goBack() {
       this.$router.back();
     },
-    showLessonActivities(lesson) {
-      this.selectedLesson = lesson;
-      this.$nextTick(() => {
-        $("#lessonActivitiesTable").DataTable();
+    showLessonActivities(module) {
+      this.selectedLesson = module;
+      this.$router.push({
+        name: "ModuleActivities",
+        params: { id: this.course.id, modId: module.id },
       });
     },
   },
