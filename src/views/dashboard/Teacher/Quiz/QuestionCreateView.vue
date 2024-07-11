@@ -185,7 +185,8 @@ export default {
       this.submitChoicesQuestion(quizData);
     },
     checkMultipleCorrectAnswers(options) {
-      const correctAnswersCount = options.filter((option) => option.correct).length;
+      const correctAnswersCount = options.filter((option) => option.correct_option)
+        .length;
       return correctAnswersCount > 1;
     },
     async submitChoicesOptions(options, slug, quizSlug, mtpId) {

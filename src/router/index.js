@@ -28,6 +28,7 @@ import QuestionCreateView from "@/views/dashboard/Teacher/Quiz/QuestionCreateVie
 // Student
 import CourseView from "@/views/dashboard/Student/Course/CourseView.vue";
 import ModuleView from "@/views/dashboard/Student/Course/Module/ModuleView.vue";
+import TakeQuiz from "@/views/dashboard/Student/Quiz/TakeQuiz.vue";
 
 const routes = [
   {
@@ -50,6 +51,11 @@ const routes = [
     path: "/courses/",
     name: "Courses",
     component: CoursesView,
+  },
+  {
+    path: "/courses/:slug/quiz/:quizSlug/",
+    name: "TakeQuiz",
+    component: TakeQuiz,
   },
   {
     path: "/courses/:slug/",

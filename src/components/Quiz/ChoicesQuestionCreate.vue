@@ -4,7 +4,7 @@
     <div class="field">
       <label class="label">Choose Ordering</label>
       <div class="select is-primary">
-        <select v-model="form.ordering">
+        <select v-model="form.choice_order">
           <option value="" disabled>Choose Ordering</option>
           <option v-for="category in categories" :key="category" :value="category">
             {{ category }}
@@ -37,7 +37,8 @@ export default {
   data() {
     return {
       form: {
-        ordering: "",
+        choice_order: "",
+        is_many_answers: false,
         options: [
           { option: "", correct_option: false },
           { option: "", correct_option: false },
@@ -48,7 +49,7 @@ export default {
   },
   methods: {
     addOption() {
-      this.form.options.push({ text: "", correct: false });
+      this.form.options.push({ option: "", correct_option: false });
     },
     removeOption(index) {
       this.form.options.splice(index, 1);
