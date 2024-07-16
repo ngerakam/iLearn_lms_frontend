@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+import VueRewards from "vue-rewards";
 // import apiClient from "./api";
 
 import axios from "axios";
@@ -61,6 +62,6 @@ store
   })
   .catch((error) => {
     console.error("Failed to fetch initial data before app mount:", error);
-    createApp(App).use(store).use(router, axios).mount("#app");
+    createApp(App).use(store).use(router, axios).use(VueRewards).mount("#app");
   });
 //createApp(App).use(store).use(router, axios).mount("#app");

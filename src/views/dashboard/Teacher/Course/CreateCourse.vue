@@ -52,29 +52,70 @@
               </div>
               <div class="columns">
                 <div class="column">
-                  <div class="field">
-                    <label class="label">Choose category</label>
-                    <div class="select is-multiple">
-                      <select multiple size="3" v-model="form.categories">
-                        <option
-                          v-for="category in categories"
-                          v-bind:key="category.id"
-                          v-bind:value="category.id"
+                  <div class="columns">
+                    <div class="column">
+                      <div class="field">
+                        <label class="label">Choose Learning Path</label>
+                        <div class="select is-primary">
+                          <select v-model="form.learning_path">
+                            <option value="">Choose Learning Path</option>
+                            <option
+                              v-for="path in learningPaths"
+                              :key="path.id"
+                              :value="path.id"
+                            >
+                              {{ path.title }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="column">
+                      <div class="field mt-3">
+                        <label class="label">Add Learning Path</label>
+                        <button
+                          class="button is-secondary"
+                          @click="openLearningPathModal"
                         >
-                          {{ category.title }}
-                        </option>
-                      </select>
+                          <span class="icon">
+                            <i class="fas fa-plus"></i>
+                          </span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div class="column">
-                  <div class="field mt-3">
-                    <label class="label">Add category</label>
-                    <button class="button is-secondary" @click="openCategoryModal">
-                      <span class="icon">
-                        <i class="fas fa-plus"></i>
-                      </span>
-                    </button>
+                  <div class="columns">
+                    <div class="column">
+                      <div class="field">
+                        <label class="label">Choose category</label>
+                        <div class="select is-multiple">
+                          <select multiple size="3" v-model="form.categories">
+                            <option
+                              v-for="category in categories"
+                              v-bind:key="category.id"
+                              v-bind:value="category.id"
+                            >
+                              {{ category.title }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="column">
+                      <div class="field mt-3">
+                        <label class="label">Add category</label>
+                        <button
+                          class="button is-secondary"
+                          @click="openCategoryModal"
+                        >
+                          <span class="icon">
+                            <i class="fas fa-plus"></i>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -123,12 +164,17 @@
       </div>
     </div>
     <CategoryModal ref="categoryModal" @category-added="updateCategories" />
+    <LearningPathModal
+      ref="LearningPathModal"
+      @learning-path-added="updateLearningPaths"
+    />
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import CategoryModal from "@/components/Categories/CategoryModal.vue";
+import LearningPathModal from "@/components/LearningPath/LearningPathModal.vue";
 
 export default {
   data() {
@@ -138,17 +184,21 @@ export default {
         short_description: "",
         long_description: "",
         categories: [],
+        learning_path: "",
         status: "",
         image: null,
       },
       categories: [],
+      learningPaths: [],
     };
   },
   components: {
     CategoryModal,
+    LearningPathModal,
   },
   mounted() {
     this.getCategories();
+    this.getLearningPaths();
   },
   methods: {
     async getCategories() {
@@ -157,6 +207,14 @@ export default {
         // console.log(response.data);
         this.categories = response.data.data;
       });
+    },
+    async getLearningPaths() {
+      try {
+        const response = await axios.get("courses/learning-paths/");
+        this.learningPaths = response.data.data;
+      } catch (error) {
+        console.error("Error fetching learning paths:", error);
+      }
     },
     goBack() {
       this.$router.back();
@@ -189,9 +247,21 @@ export default {
     openCategoryModal() {
       this.$refs.categoryModal.openModal();
     },
+    openLearningPathModal() {
+      this.$refs.LearningPathModal.openModal();
+    },
     async updateCategories(category) {
       await this.getCategories();
-      this.course.categories.push(category.data.id);
+      if (!this.form.categories.includes(category.id)) {
+        this.form.categories.push(category.id);
+      }
+    },
+
+    async updateLearningPaths(learningPath) {
+      await this.getLearningPaths();
+      if (!this.form.learning_paths.includes(learningPath.id)) {
+        this.form.learning_paths.push(learningPath.id);
+      }
     },
   },
 };

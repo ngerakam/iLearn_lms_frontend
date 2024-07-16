@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="column is-9 card" v-if="isQuizStarted">
-      <SingleQuestion :question="activeQuestion" />
+      <SingleQuestion :question="activeQuestion" @update-answer="storeAnswer" />
 
       <div class="px-3 py-3 mt-3 mb-3">
         <nav class="pagination">
@@ -48,6 +48,7 @@
       <div class="columns">
         <div class="column"></div>
         <div class="column"></div>
+        <ConfettiComponent ref="confettiComponent" />
         <div class="column"></div>
         <div class="column">
           <button
@@ -67,6 +68,7 @@
 import axios from "axios";
 import fetchQuiz from "@/Utilities/getQuiz";
 import SingleQuestion from "./SingleQuestion.vue";
+import ConfettiComponent from "@/components/Utils/ConfettiComponent.vue";
 
 export default {
   data() {
@@ -78,7 +80,7 @@ export default {
       isQuizStarted: false,
     };
   },
-  components: { SingleQuestion },
+  components: { SingleQuestion, ConfettiComponent },
   async mounted() {
     const courseSlug = this.$router.currentRoute.value.params.slug;
     const quizSlug = this.$router.currentRoute.value.params.quizSlug;
@@ -100,7 +102,10 @@ export default {
     },
     isLastQuestion() {
       if (!this.questions.length || !this.activeQuestion) return false;
-      return this.questions.indexOf(this.activeQuestion) === this.questions.length - 1;
+      return (
+        this.questions.indexOf(this.activeQuestion) ===
+        this.questions.length - 1
+      );
     },
     isFirstQuestion() {
       if (!this.questions.length || !this.activeQuestion) return false;
@@ -111,6 +116,10 @@ export default {
     },
   },
   methods: {
+    capitalizeFirstLetter(word) {
+      if (!word) return ""; // Handle empty string or undefined input
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    },
     startQuiz() {
       this.activeQuestion = this.questions[0];
       this.isQuizStarted = true;
@@ -127,24 +136,29 @@ export default {
         this.activeQuestion = this.questions[currentIndex - 1];
       }
     },
-    async submitQuiz() {
-      try {
-        const sessionResponse = await axios.post(
-          `quiz/courses/${this.courseSlug}/quiz/${this.quizSlug}/sessions/`,
-          {
-            user: this.$store.state.user.id,
-            quiz: this.quiz.id,
-            user_answers: this.userAnswers,
-          }
-        );
-        console.log("Quiz submitted successfully:", sessionResponse.data);
-      } catch (error) {
-        console.error("Error submitting quiz:", error);
-      }
+    storeAnswer({ questionId, answer }) {
+      this.userAnswers[questionId] = { questionId, answer };
     },
-    capitalizeFirstLetter(word) {
-      if (!word) return ""; // Handle empty string or undefined input
-      return word.charAt(0).toUpperCase() + word.slice(1);
+    async submitQuiz() {
+      // try {
+      //   const sessionResponse = await axios.post(
+      //     `quiz/courses/${this.courseSlug}/quiz/${this.quizSlug}/sessions/`,
+      //     {
+      //       user: this.$store.state.user.id,
+      //       quiz: this.quiz.id,
+      //       user_answers: this.userAnswers,
+      //     }
+      //   );
+      //   console.log("Quiz submitted successfully:", sessionResponse.data);
+      // } catch (error) {
+      //   console.error("Error submitting quiz:", error);
+      // }
+      console.log(this.userAnswers);
+      // Trigger rewards
+      this.$refs.confettiComponent.confettiReward();
+      this.$refs.confettiComponent.balloonsReward();
+      this.$refs.confettiComponent.emojiReward();
+      this.$refs.confettiComponent.fullPageReward();
     },
   },
 };

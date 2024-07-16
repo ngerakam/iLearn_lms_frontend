@@ -42,7 +42,9 @@
             <div>
               <div class="columns">
                 <div class="column"></div>
-                <div class="column"></div>
+                <div class="column">
+                  <ConfettiComponent ref="confettiComponent" />
+                </div>
                 <div class="column">
                   <div v-if="isLastLesson && isLastModule" class="column is-12 mt-5">
                     <template v-if="courseActivity?.status === 'done'">
@@ -68,11 +70,13 @@
 import axios from "axios";
 import CustomModuleDropdown from "@/components/Utils/CustomModuleDropdown.vue";
 import LessonViewVue from "../Lesson/LessonView.vue";
+import ConfettiComponent from "@/components/Utils/ConfettiComponent.vue";
 
 export default {
   components: {
     CustomModuleDropdown,
     LessonViewVue,
+    ConfettiComponent,
   },
   data() {
     return {
@@ -288,7 +292,14 @@ export default {
         });
         if (response.status === 200) {
           console.log("Module activity updated successfully.", response.data.data);
-          this.$router.push("/dashboard/");
+          // Trigger rewards
+          this.$refs.confettiComponent.confettiReward();
+          this.$refs.confettiComponent.balloonsReward();
+          this.$refs.confettiComponent.emojiReward();
+          this.$refs.confettiComponent.fullPageReward();
+          setTimeout(() => {
+            this.$router.push("/dashboard/");
+          }, 30000); // 30 seconds delay
         }
       } catch (error) {
         console.error("Error updating Course activity:", error);

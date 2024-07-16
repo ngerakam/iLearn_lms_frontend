@@ -60,24 +60,14 @@
                 <div class="column"></div>
 
                 <div class="column">
-                  <div class="control buttons">
-                    <button
-                      class="button is-primary"
-                      v-if="!isQuizCreateVisible"
-                      @click="showQuizCreate"
-                    >
-                      <i class="fas fa-plus icon-spaced"></i>
-                      Add Quiz
-                    </button>
-                    <button
-                      class="button is-primary"
-                      v-if="!isLessonCreateVisible"
-                      @click="showLessonCreate"
-                    >
-                      <i class="fas fa-plus icon-spaced"></i>
-                      Add Lesson
-                    </button>
-                  </div>
+                  <button
+                    class="button is-primary"
+                    v-if="!isLessonCreateVisible"
+                    @click="showLessonCreate"
+                  >
+                    <i class="fas fa-plus icon-spaced"></i>
+                    Add Lesson
+                  </button>
                 </div>
               </div>
               <div class="container is-fullhd">
@@ -113,7 +103,6 @@ export default {
       module_title: "",
       lessons: [],
       isLessonCreateVisible: false,
-      isQuizCreateVisible: false,
     };
   },
   async mounted() {
@@ -149,10 +138,6 @@ export default {
     },
     showLessonCreate() {
       this.isLessonCreateVisible = true;
-    },
-    showQuizCreate() {
-      const slug = this.$router.currentRoute.value.params.slug;
-      this.$router.push({ name: "QuizCreateView", params: { slug: slug } });
     },
     async refreshLessons() {
       const slug = this.$router.currentRoute.value.params.slug;

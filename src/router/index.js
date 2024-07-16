@@ -25,6 +25,8 @@ import LessonCreateDetails from "@/views/dashboard/Teacher/Lesson/LessonCreateDe
 import EditLessonPage from "@/views/dashboard/Teacher/Lesson/EditLessonPage.vue";
 import QuizCreateView from "@/views/dashboard/Teacher/Quiz/QuizCreateView.vue";
 import QuestionCreateView from "@/views/dashboard/Teacher/Quiz/QuestionCreateView.vue";
+import SingleQuiz from "@/views/dashboard/Teacher/Quiz/views/SingleQuiz.vue";
+import QuestionView from "@/views/dashboard/Teacher/Quiz/views/QuestionView.vue";
 // Student
 import CourseView from "@/views/dashboard/Student/Course/CourseView.vue";
 import ModuleView from "@/views/dashboard/Student/Course/Module/ModuleView.vue";
@@ -103,7 +105,7 @@ const routes = [
     component: CreateModule,
   },
   {
-    path: "/dashboard/create-course/:slug/quiz/",
+    path: "/dashboard/create-quiz/",
     name: "QuizCreateView",
     component: QuizCreateView,
   },
@@ -111,6 +113,16 @@ const routes = [
     path: "/dashboard/create-course/:slug/quiz/:quizSlug/",
     name: "QuestionCreateView",
     component: QuestionCreateView,
+  },
+  {
+    path: "/dashboard/:slug/quiz",
+    name: "SingleQuiz",
+    component: SingleQuiz,
+  },
+  {
+    path: "/dashboard/:slug/quiz/:quizSlug/",
+    name: "QuestionView",
+    component: QuestionView,
   },
   {
     path: "/dashboard/create-course/:slug/module/:moduleSlug/",

@@ -12,6 +12,7 @@
         class="textarea"
         v-model="essay_answer"
         placeholder="Enter answer ..."
+        @input="emitAnswer"
       ></textarea>
     </div>
   </div>
@@ -38,10 +39,11 @@ export default {
   },
 
   methods: {
-    async getSampleAnswer() {
-      await axios.post(
-        `quiz/courses/${courseSlug}/quiz/${quizSlug}/questions/${question.id}/`
-      );
+    emitAnswer() {
+      this.$emit("answer", {
+        answer: this.essay_answer,
+        question_type: this.question.question_type,
+      });
     },
   },
 };

@@ -24,6 +24,7 @@
     "util": "^0.12.5",
     "vue": "^3.2.13",
     "vue-doc-preview": "^0.3.2",
+    "vue-rewards": "^1.0.1",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0",
     "xml2js": "^0.6.2"

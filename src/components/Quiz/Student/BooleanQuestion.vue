@@ -4,11 +4,21 @@
       <label class="label">Choose Answer</label>
       <div class="control">
         <label class="radio">
-          <input type="radio" v-model="correct_answer" :value="true" />
+          <input
+            type="radio"
+            v-model="correct_answer"
+            :value="true"
+            @change="emitAnswer"
+          />
           True
         </label>
         <label class="radio">
-          <input type="radio" v-model="correct_answer" :value="false" />
+          <input
+            type="radio"
+            v-model="correct_answer"
+            :value="false"
+            @change="emitAnswer"
+          />
           False
         </label>
       </div>
@@ -33,12 +43,12 @@ export default {
       quizSlug: this.$router.currentRoute.value.params.quizSlug,
     };
   },
-  mounted() {},
   methods: {
-    async submitAnswer() {
-      await axios.post(
-        `quiz/courses/${courseSlug}/quiz/${quizSlug}/questions/${this.question.id}/`
-      );
+    emitAnswer() {
+      this.$emit("answer", {
+        answer: this.correct_answer,
+        question_type: this.question.question_type,
+      });
     },
   },
 };

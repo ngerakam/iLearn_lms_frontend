@@ -39,8 +39,8 @@
               <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
             </div>
             <hr />
-            Or contact the site admin({{ siteSetup?.addresses?.email_contact }}) for
-            registration!
+            Or contact the site admin({{ siteSetup?.addresses?.email_contact }})
+            for registration!
           </div>
         </div>
       </div>
@@ -73,8 +73,7 @@ export default {
       this.errors = [];
     },
     async submitForm() {
-      console.log("submitted");
-
+      // console.log("submitted");
       axios.defaults.headers.common["Authorization"] = "";
 
       localStorage.removeItem("token");
@@ -99,11 +98,12 @@ export default {
             withCredentials: true,
           });
           const tokens = response.data;
-          console.log(response.data);
+          // console.log(response.data);
 
           this.$store.commit("setToken", tokens);
 
-          axios.defaults.headers.common["Authorization"] = "Bearer " + tokens.access;
+          axios.defaults.headers.common["Authorization"] =
+            "Bearer " + tokens.access;
 
           localStorage.setItem("access_token", tokens.access);
           localStorage.setItem("refresh_token", tokens.refresh);

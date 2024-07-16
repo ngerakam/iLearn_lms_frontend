@@ -21,9 +21,7 @@
         <h2 class="subtitle is-size-6">{{ activeClass }}</h2>
         <!-- Enrolled Courses Tab -->
         <div v-if="activeClass === 'Enrolled Courses'">
-          <div v-if="enrolled_courses.length === 0">
-            No enrolled courses found.
-          </div>
+          <div v-if="enrolled_courses.length === 0">No enrolled courses found.</div>
           <div v-else class="columns is-multiline">
             <div
               class="column is-3"
@@ -72,15 +70,13 @@
             <div class="column"></div>
             <div class="column"></div>
             <div class="column">
-              <router-link
-                to="/dashboard/create-course"
-                class="button is-primary"
-              >
+              <router-link to="/dashboard/create-course" class="button is-primary">
                 <i class="fas fa-plus icon-spaced"></i>
                 Create Course
               </router-link>
             </div>
           </div>
+
           <div v-if="own_courses.length === 0">No created courses found.</div>
           <div v-else class="columns is-multiline">
             <div
@@ -88,10 +84,7 @@
               v-for="course in paginatedOwnCourses"
               :key="course.id"
             >
-              <CourseItemStatus
-                :course="course"
-                @click="handleCourseEdit(course.slug)"
-              />
+              <CourseItemStatus :course="course" @click="handleCourseEdit(course.slug)" />
             </div>
           </div>
           <div class="column is-7 mx-auto">
@@ -102,6 +95,26 @@
               :initialPage="currentPage.own"
               @page-changed="handlePageChanged('own', $event)"
             />
+          </div>
+        </div>
+
+        <!-- Created Quizzes Tab -->
+        <div v-if="activeClass === 'Created Quizzes'">
+          <div class="columns">
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column">
+              <router-link to="/dashboard/create-quiz/" class="button is-primary">
+                <i class="fas fa-plus icon-spaced"></i>
+                Create Quiz
+              </router-link>
+            </div>
+          </div>
+
+          <div v-if="own_courses.length === 0">No created Quizzes found.</div>
+          <div v-else>
+            <QuizView />
           </div>
         </div>
 
@@ -132,9 +145,7 @@
 
         <!-- Unpublished Courses Tab -->
         <div v-if="activeClass === 'Unpublished Courses'">
-          <div v-if="unpub_courses.length === 0">
-            No unpublished courses found.
-          </div>
+          <div v-if="unpub_courses.length === 0">No unpublished courses found.</div>
           <div v-else class="columns is-multiline">
             <div
               class="column is-3"
@@ -208,6 +219,7 @@ import TeacherStatistics from "./Teacher/TeacherStatistics.vue";
 import UserManagment from "./Admin/UserManagment.vue";
 import SiteSetup from "./Admin/SiteSetup.vue";
 import PaginationComponent from "@/components/Utils/PaginationComponent";
+import QuizView from "./Teacher/Quiz/views/QuizView.vue";
 
 export default {
   data() {
@@ -236,6 +248,7 @@ export default {
     UserManagment,
     SiteSetup,
     PaginationComponent,
+    QuizView,
   },
   computed: {
     ...mapState({
@@ -253,6 +266,7 @@ export default {
         tabs = [
           "Courses Statistics",
           "Created Courses",
+          "Created Quizzes",
           "Unpublished Courses",
           "Course Notifications",
         ];
@@ -265,6 +279,7 @@ export default {
           "Site Notifications",
           "Courses Statistics",
           "Created Courses",
+          "Created Quizzes",
         ];
       }
 
