@@ -85,12 +85,22 @@
       </label>
     </div>
 
-    <button class="button is-primary" type="submit">Add Quiz</button>
+    <button class="button is-primary" type="submit">
+      <i v-if="existingQuiz" class="far fa-edit icon-spaced"></i>
+      <i v-else class="fas fa-plus icon-spaced"></i>
+      {{ existingQuiz ? "Update Quiz" : "Add Quiz" }}
+    </button>
   </form>
 </template>
 
 <script>
 export default {
+  props: {
+    existingQuiz: {
+      type: Object,
+      default: null,
+    },
+  },
   data() {
     return {
       form: {
@@ -107,6 +117,16 @@ export default {
       categories: ["assignment", "exam", "practice"],
     };
   },
+  watch: {
+    existingQuiz: {
+      immediate: true,
+      handler(newQuiz) {
+        if (newQuiz) {
+          this.form = { ...newQuiz };
+        }
+      },
+    },
+  },
   methods: {
     submitQuiz() {
       if (!this.form.title || !this.form.description || !this.form.pass_mark) {
@@ -122,5 +142,7 @@ export default {
 </script>
 
 <style scoped>
-/* Add your custom styles here */
+.icon-spaced {
+  margin-right: 8px;
+}
 </style>

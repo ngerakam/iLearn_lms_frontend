@@ -17,8 +17,9 @@
     <section class="section">
       <div class="columns content">
         <div class="column is-2">
-          <h2 class="title is-6">List of Questions under Quiz: {{ quiz?.title }}</h2>
-          <p>{{ module_title }}</p>
+          <h2 class="title is-6">
+            List of Questions under Quiz: {{ quiz?.title }}
+          </h2>
           <ul class="menu-list no-style">
             <li v-for="question in questions" v-bind:key="question.id">
               <a> {{ question.text }}</a>
@@ -45,7 +46,7 @@
           <div class="container columns">
             <div class="column">
               <CreateQuestion
-                @submit-quiz="handleQuestionSubmission"
+                @submit-question="handleQuestionSubmission"
                 v-if="isQuizCreateVisible"
               />
             </div>
@@ -80,9 +81,6 @@ import EassyQuestionCreate from "@/components/Quiz/EassyQuestionCreate.vue";
 export default {
   data() {
     return {
-      form: {
-        quizList: [],
-      },
       quiz: null,
       questionObject: null,
       quiz_type: "",
@@ -100,11 +98,13 @@ export default {
   async mounted() {
     const slug = this.$router.currentRoute.value.params.slug;
     const quizSlug = this.$router.currentRoute.value.params.quizSlug;
-    await axios.get(`quiz/courses/${slug}/quiz/${quizSlug}`).then((response) => {
-      if (response.status === 200) {
-        this.quiz = response.data.data;
-      }
-    });
+    await axios
+      .get(`quiz/courses/${slug}/quiz/${quizSlug}`)
+      .then((response) => {
+        if (response.status === 200) {
+          this.quiz = response.data.data;
+        }
+      });
 
     await axios
       .get(`quiz/courses/${slug}/quiz/${quizSlug}/questions/`)
@@ -121,8 +121,11 @@ export default {
     async showQuestionCreate() {
       this.isQuizCreateVisible = !this.isQuizCreateVisible;
     },
+    addQuestionToArray(question) {
+      this.questions = [...this.questions, question];
+    },
     async handleQuestionSubmission(quizData) {
-      console.log("Quiz Data:", quizData);
+      // console.log("Quiz Data:", quizData);
       this.isQuizTypeCreateVisible = true;
       this.quiz_type = quizData.question_type;
 
@@ -136,7 +139,8 @@ export default {
 
       if (response.status === 201) {
         this.questionObject = response.data.data;
-        console.log(response.data);
+        this.addQuestionToArray(response.data.data);
+        // console.log(response.data);
       }
     },
     async handleEssayQuestionSubmit(quizData) {
@@ -152,7 +156,7 @@ export default {
         if (response.status === 201) {
           this.isQuizTypeCreateVisible = false;
           this.isQuizCreateVisible = false;
-          console.log(response.data);
+          // console.log(response.data);
         }
       } catch (error) {
         console.error("Error submitting choices question:", error);
@@ -171,22 +175,25 @@ export default {
         if (response.status === 201) {
           this.isQuizTypeCreateVisible = false;
           this.isQuizCreateVisible = false;
-          console.log(response.data);
+          // console.log(response.data);
         }
       } catch (error) {
         console.error("Error submitting choices question:", error);
       }
     },
     handleChoicesQuestionSubmission(quizData) {
-      const hasManyCorrectAnswers = this.checkMultipleCorrectAnswers(quizData.options);
+      const hasManyCorrectAnswers = this.checkMultipleCorrectAnswers(
+        quizData.options
+      );
 
       quizData.is_many_answers = hasManyCorrectAnswers;
 
       this.submitChoicesQuestion(quizData);
     },
     checkMultipleCorrectAnswers(options) {
-      const correctAnswersCount = options.filter((option) => option.correct_option)
-        .length;
+      const correctAnswersCount = options.filter(
+        (option) => option.correct_option
+      ).length;
       return correctAnswersCount > 1;
     },
     async submitChoicesOptions(options, slug, quizSlug, mtpId) {
@@ -220,11 +227,16 @@ export default {
         if (response.status === 201) {
           this.isQuizTypeCreateVisible = false;
           this.isQuizCreateVisible = false;
-          console.log(response.data);
+          // console.log(response.data);
 
           const mtpId = response.data.data.id;
 
-          await this.submitChoicesOptions(quizData.options, slug, quizSlug, mtpId);
+          await this.submitChoicesOptions(
+            quizData.options,
+            slug,
+            quizSlug,
+            mtpId
+          );
         }
       } catch (error) {
         console.error("Error submitting choices question:", error);

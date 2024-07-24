@@ -17,7 +17,11 @@
       <div class="select is-primary">
         <select v-model="form.question_type">
           <option value="" disabled>Choose Question Type</option>
-          <option v-for="category in categories" :key="category" :value="category">
+          <option
+            v-for="category in categories"
+            :key="category"
+            :value="category"
+          >
             {{ category }}
           </option>
         </select>
@@ -37,12 +41,22 @@
       </div>
     </div>
 
-    <button class="button is-primary" type="submit">Add Quiz</button>
+    <button class="button is-primary" type="submit">
+      <i v-if="existingQuestion" class="far fa-edit icon-spaced"></i>
+      <i v-else class="fas fa-plus icon-spaced"></i>
+      {{ existingQuestion ? "Update Question" : "Add Question" }}
+    </button>
   </form>
 </template>
 
 <script>
 export default {
+  props: {
+    existingQuestion: {
+      type: Object,
+      default: null,
+    },
+  },
   data() {
     return {
       form: {
@@ -53,9 +67,19 @@ export default {
       categories: ["essay", "boolean", "multi-choice"],
     };
   },
+  watch: {
+    existingQuestion: {
+      immediate: true,
+      handler(newQuiz) {
+        if (newQuiz) {
+          this.form = { ...newQuiz };
+        }
+      },
+    },
+  },
   methods: {
     submitQuiz() {
-      this.$emit("submit-quiz", this.form);
+      this.$emit("submit-question", this.form);
     },
   },
 };

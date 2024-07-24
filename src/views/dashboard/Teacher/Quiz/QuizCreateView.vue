@@ -38,7 +38,7 @@
           </div>
         </div>
         <div class="column is-10 px-3 py-3 mt-3 ml-3" v-if="isCreateQuiz">
-          <CreateQuiz @submit-quiz="handleQuizSubmission" />
+          <QuizForm @submit-quiz="handleQuizSubmission" />
         </div>
       </div>
     </div>
@@ -47,7 +47,7 @@
 
 <script>
 import axios from "axios";
-import CreateQuiz from "@/components/Quiz/CreateQuiz.vue";
+import QuizForm from "@/components/Quiz/QuizForm.vue";
 
 export default {
   data() {
@@ -67,7 +67,7 @@ export default {
     },
   },
   components: {
-    CreateQuiz,
+    QuizForm,
   },
   mounted() {
     this.getOwnCourses();

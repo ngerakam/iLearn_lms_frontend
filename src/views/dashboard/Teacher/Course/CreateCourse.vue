@@ -256,13 +256,6 @@ export default {
         this.form.categories.push(category.id);
       }
     },
-
-    async updateLearningPaths(learningPath) {
-      await this.getLearningPaths();
-      if (!this.form.learning_paths.includes(learningPath.id)) {
-        this.form.learning_paths.push(learningPath.id);
-      }
-    },
   },
 };
 </script>
