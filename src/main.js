@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import VueRewards from "vue-rewards";
+import "@cyntler/react-doc-viewer/dist/index.css";
 // import apiClient from "./api";
 
 import axios from "axios";

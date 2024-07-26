@@ -1,14 +1,5 @@
 <template>
   <div class="container is-centered mt-3 mb-3">
-    <div class="columns">
-      <div class="column">
-        <button class="button is-small is-responsive" @click="goBack">
-          <i class="fas fa-arrow-left icon-spaced"></i>Back
-        </button>
-      </div>
-      <div class="column"></div>
-      <div class="column"></div>
-    </div>
     <h3 class="title is-5">My Courses and Quizzes</h3>
     <table
       id="courseQuizzesTable"
@@ -85,7 +76,10 @@ export default {
         const response = await axios.get(`quiz/courses/${courseSlug}/`);
         return response.data.data.length; // Assuming the API returns an array of quizzes
       } catch (error) {
-        console.error(`Error fetching quizzes for course ${courseSlug}:`, error);
+        console.error(
+          `Error fetching quizzes for course ${courseSlug}:`,
+          error
+        );
         return 0;
       }
     },

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PPTX Viewer</title>
+    <link rel="stylesheet" href="./pptxjs/css/nv.d3.min.css" />
+    <link rel="stylesheet" href="./pptxjs/css/pptxjs.css" />
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: auto;
+      }
+      #pptx-viewer {
+        width: 100%;
+        min-height: 100%;
+      }
+      #error-log {
+        background-color: #ffeeee;
+        color: red;
+        padding: 10px;
+        margin-top: 10px;
+        white-space: pre-wrap;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="pptx-viewer"></div>
+    <div id="error-log"></div>
+
+    <script src="./pptxjs/js/jquery-1.11.3.min.js"></script>
+    <script src="./pptxjs/js/jszip.min.js"></script>
+    <script src="./pptxjs/js/filereader.js"></script>
+    <script src="./pptxjs/js/d3.min.js"></script>
+    <script src="./pptxjs/js/nv.d3.min.js"></script>
+    <script src="./pptxjs/js/pptxjs.js"></script>
+    <script src="./pptxjs/js/divs2slides.js"></script>
+    <script>
+      function logError(error) {
+        console.error(error);
+        const errorLog = document.getElementById("error-log");
+        errorLog.textContent += error.toString() + "\n" + error.stack + "\n\n";
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const fileUrl = urlParams.get("file");
+
+        if (fileUrl) {
+          $("#pptx-viewer").pptxToHtml({
+            pptxFileUrl: fileUrl,
+            slidesScale: "100%",
+            slideMode: false,
+            keyBoardShortCut: false,
+            mediaProcess: true,
+            slideModeConfig: {
+              first: 1,
+              nav: true,
+              navTxtColor: "black",
+              showPlayPauseBtn: true,
+              keyBoardShortCut: false,
+              showSlideNum: true,
+              showTotalSlideNum: true,
+              autoSlide: false,
+              randomAutoSlide: false,
+              loop: false,
+              background: false,
+              transition: "default",
+              transitionTime: 1,
+            },
+            success: function () {
+              console.log("PPTX loaded successfully");
+            },
+            error: function (error) {
+              logError(new Error("Error loading PPTX: " + error));
+            },
+          });
+        } else {
+          logError(new Error("No file URL provided"));
+        }
+      });
+
+      window.onerror = function (message, source, lineno, colno, error) {
+        logError(error || new Error(message));
+      };
+    </script>
+  </body>
+</html>
