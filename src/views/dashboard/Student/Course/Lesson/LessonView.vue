@@ -82,8 +82,6 @@ import MyDocPreview from "@/components/Course/MyDocPreview";
 import MyCustomVideo from "@/components/Course/MyCustomVideo";
 import MyCustomDoc from "@/components/Course/MyCustomDoc";
 import MyCustomPptViewer from "@/components/Course/MyCustomPptViewer";
-import DocViewerTroubleshooter from "@/components/DocViewerTroubleshooter.vue";
-import VueDocViewer from "@/components/VueDocViewer.vue";
 import "video.js/dist/video-js.css";
 
 export default {
@@ -111,9 +109,6 @@ export default {
     MyCustomVideo,
     MyCustomDoc,
     MyCustomPptViewer,
-    VueDocViewer,
-    DocViewerTroubleshooter,
-    VueDocPreview,
   },
   methods: {
     getFileType(FileUrl) {
