@@ -28,6 +28,9 @@ import QuestionCreateView from "@/views/dashboard/Teacher/Quiz/QuestionCreateVie
 import SingleQuiz from "@/views/dashboard/Teacher/Quiz/views/SingleQuiz.vue";
 import QuestionView from "@/views/dashboard/Teacher/Quiz/views/QuestionView.vue";
 import AnswersView from "@/views/dashboard/Teacher/Quiz/views/AnswersView.vue";
+// view course
+import CourseViewT from "@/views/dashboard/Teacher/ViewCourse/CourseViewT.vue";
+import ModuleViewT from "@/views/dashboard/Teacher/ViewCourse/Module/ModuleViewT.vue";
 // Student
 import CourseView from "@/views/dashboard/Student/Course/CourseView.vue";
 import ModuleView from "@/views/dashboard/Student/Course/Module/ModuleView.vue";
@@ -69,6 +72,16 @@ const routes = [
     path: "/courses/:slug/modules/",
     name: "ModuleView",
     component: ModuleView,
+  },
+  {
+    path: "/view-courses/:slug/",
+    name: "CourseViewT",
+    component: CourseViewT,
+  },
+  {
+    path: "/view-courses/:slug/modules/",
+    name: "ModuleViewT",
+    component: ModuleViewT,
   },
   {
     path: "/authors/:id",

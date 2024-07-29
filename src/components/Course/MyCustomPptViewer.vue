@@ -33,9 +33,7 @@ export default defineComponent({
     const error = ref(null);
 
     const updateViewerUrl = () => {
-      viewerUrl.value = `/pptx-viewer.html?file=${encodeURIComponent(
-        props.fileUrl
-      )}`;
+      viewerUrl.value = `/pptx-viewer.html?file=${encodeURIComponent(props.fileUrl)}`;
       error.value = null; // Reset error when URL changes
     };
 
@@ -43,11 +41,9 @@ export default defineComponent({
       // Check if the iframe content loaded successfully
       try {
         const iframeDocument =
-          pptxFrame.value.contentDocument ||
-          pptxFrame.value.contentWindow.document;
+          pptxFrame.value.contentDocument || pptxFrame.value.contentWindow.document;
         if (iframeDocument.body.innerHTML === "") {
-          error.value =
-            "Failed to load PPTX file. Please check the file and try again.";
+          error.value = "Failed to load PPTX file. Please check the file and try again.";
         }
       } catch (e) {
         error.value =
@@ -82,6 +78,13 @@ export default defineComponent({
   width: 100%;
   height: 600px; /* Adjust as needed */
 }
+
+.pptx-viewer-container iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
 .error-message {
   color: red;
   padding: 20px;

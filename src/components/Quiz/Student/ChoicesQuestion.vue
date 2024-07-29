@@ -1,7 +1,8 @@
 <template>
   <div class="card">
     <div class="field px-3 py-3">
-      <label class="label">Choose Answer</label>
+      <label class="label" v-if="isManyAnswers">Choose Answers</label>
+      <label class="label" v-if="!isManyAnswers">Choose Answer</label>
       <div class="control" v-for="(option, index) in options" :key="index">
         <div v-if="isManyAnswers">
           <label class="checkbox mt-2 mb-2">
@@ -81,9 +82,7 @@ export default {
       const quizSlug = this.$router.currentRoute.value.params.quizSlug;
 
       const payload = {
-        selectedOption: this.isManyAnswers
-          ? this.selectedOptions
-          : this.selectedOption,
+        selectedOption: this.isManyAnswers ? this.selectedOptions : this.selectedOption,
       };
 
       await axios.post(

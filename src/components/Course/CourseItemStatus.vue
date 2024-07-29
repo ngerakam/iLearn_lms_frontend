@@ -15,9 +15,7 @@
       <div class="content">
         <div class="columns">
           <div class="column">
-            <span class="tag is-text" v-if="course.status == 'draft'">
-              Draft
-            </span>
+            <span class="tag is-text" v-if="course.status == 'draft'"> Draft </span>
             <span class="tag is-link" v-if="course.status == 'published'">
               Published
             </span>
@@ -36,6 +34,13 @@
           <i class="far fa-edit icon-spaced"></i>
           Edit</router-link
         >
+        <router-link
+          class="button is-info ml-2"
+          :to="{ name: 'CourseViewT', params: { slug: course.slug } }"
+        >
+          <i class="far fa-eye icon-spaced"></i>
+          View</router-link
+        >
       </div>
     </div>
   </div>
@@ -43,7 +48,15 @@
 
 <script>
 export default {
-  props: ["course"],
+  props: {
+    course: {
+      type: Object,
+      required: true,
+      validator: function (value) {
+        return value.slug !== undefined;
+      },
+    },
+  },
 };
 </script>
 <style scoped>

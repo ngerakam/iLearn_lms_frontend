@@ -6,12 +6,7 @@
       </div>
       <div class="column"></div>
       <div class="column">
-        <span class="tag is-warning" v-if="lessonActivity?.status == 'started'">
-          Started (mark as done)
-        </span>
-        <span class="tag is-success" v-else-if="lessonActivity?.status == 'done'">
-          Done
-        </span>
+        <!-- Removed student activity status -->
       </div>
     </div>
 
@@ -28,6 +23,7 @@
 
     <template v-if="lesson?.lesson_type === 'quiz'">
       <p>Quiz</p>
+      <!-- Quiz component remains unchanged -->
     </template>
 
     <template v-if="lesson?.lesson_type === 'video'">
@@ -40,7 +36,6 @@
         <Video v-bind:youtube_id="lesson?.youtube_id" />
       </div>
       <div v-else>
-        custom video component
         <MyCustomVideo
           v-bind:videoUrl="lesson?.get_video"
           v-bind:videoType="getVideoType(lesson?.get_video)"
@@ -49,14 +44,12 @@
     </template>
 
     <template v-if="lesson?.lesson_type === 'article'">
-      <p>Add a Comment</p>
+      <!-- Removed ability to add comments -->
       <CourseComment
         v-for="comment in comments"
         v-bind:key="comment.id"
         v-bind:comment="comment"
       />
-
-      <AddComment v-bind:lesson="lesson" v-on:submitComment="submitComment" />
     </template>
 
     <template v-if="lesson?.lesson_type === 'file'">
@@ -75,7 +68,6 @@
 
 <script>
 import CourseComment from "@/components/Comments/CourseComment";
-import AddComment from "@/components/Comments/AddComment";
 import Quiz from "@/components/Quiz/Quiz";
 import Video from "@/components/Course/Video";
 import MyDocPreview from "@/components/Course/MyDocPreview";
@@ -90,10 +82,7 @@ export default {
       type: Object,
       required: true,
     },
-    lessonActivity: {
-      type: Object,
-      required: true,
-    },
+    // Removed lessonActivity prop
   },
   data() {
     return {
@@ -102,7 +91,6 @@ export default {
   },
   components: {
     CourseComment,
-    AddComment,
     Quiz,
     Video,
     MyDocPreview,
@@ -121,10 +109,7 @@ export default {
       const videoType = videoUrl.split(".").pop();
       return videoType.toLowerCase();
     },
-    submitComment(comment) {
-      console.log("Submitting comment:", comment);
-      // Implement your comment submission logic here
-    },
+    // Removed submitComment method
   },
 };
 </script>

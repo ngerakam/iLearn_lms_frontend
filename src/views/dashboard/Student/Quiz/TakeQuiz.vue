@@ -102,10 +102,7 @@ export default {
     },
     isLastQuestion() {
       if (!this.questions.length || !this.activeQuestion) return false;
-      return (
-        this.questions.indexOf(this.activeQuestion) ===
-        this.questions.length - 1
-      );
+      return this.questions.indexOf(this.activeQuestion) === this.questions.length - 1;
     },
     isFirstQuestion() {
       if (!this.questions.length || !this.activeQuestion) return false;
@@ -140,20 +137,19 @@ export default {
       this.userAnswers[questionId] = { questionId, answer };
     },
     async submitQuiz() {
-      // try {
-      //   const sessionResponse = await axios.post(
-      //     `quiz/courses/${this.courseSlug}/quiz/${this.quizSlug}/sessions/`,
-      //     {
-      //       user: this.$store.state.user.id,
-      //       quiz: this.quiz.id,
-      //       user_answers: this.userAnswers,
-      //     }
-      //   );
-      //   console.log("Quiz submitted successfully:", sessionResponse.data);
-      // } catch (error) {
-      //   console.error("Error submitting quiz:", error);
-      // }
-      console.log(this.userAnswers);
+      try {
+        const sessionResponse = await axios.post(
+          `quiz/courses/${this.courseSlug}/quiz/${this.quizSlug}/quiz-sessions/`,
+          {
+            quiz: this.quiz.id,
+            user_answers: this.userAnswers,
+          }
+        );
+        console.log("Quiz submitted successfully:", sessionResponse.data);
+      } catch (error) {
+        console.error("Error submitting quiz:", error);
+      }
+      console.log({ quiz: this.quiz.id, user_answers: this.userAnswers });
       // Trigger rewards
       this.$refs.confettiComponent.confettiReward();
       this.$refs.confettiComponent.balloonsReward();

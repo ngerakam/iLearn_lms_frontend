@@ -89,10 +89,8 @@
               v-for="course in paginatedOwnCourses"
               :key="course.id"
             >
-              <CourseItemStatus
-                :course="course"
-                @click="handleCourseEdit(course.slug)"
-              />
+              <CourseItemStatus :course="course" />
+              <!-- @click="handleCourseEdit(course.slug)" -->
             </div>
           </div>
           <div class="column is-7 mx-auto">
@@ -130,10 +128,11 @@
         </div>
         <!-- Quiz sessions -->
         <div v-if="activeClass === 'Quiz Sessions'">
-          <div class="columns is-multiline">
-            <div>
-              <TeacherStatistics />
-            </div>
+          <div v-if="userRoles?.is_student">
+            <QuizSession />
+          </div>
+          <div v-else>
+            <Session />
           </div>
         </div>
 
@@ -241,7 +240,8 @@ import UserManagment from "./Admin/UserManagment.vue";
 import SiteSetup from "./Admin/SiteSetup.vue";
 import PaginationComponent from "@/components/Utils/PaginationComponent";
 import QuizView from "./Teacher/Quiz/views/QuizView.vue";
-
+import Session from "@/views/dashboard/Teacher/ViewQuizSession/Session.vue";
+import QuizSession from "@/views/dashboard/Student/ViewQuizSession/QuizSession.vue";
 export default {
   data() {
     return {
@@ -259,6 +259,7 @@ export default {
         unpub: 1,
         completed: 1,
       },
+      userRoles: null,
     };
   },
   components: {
@@ -270,20 +271,22 @@ export default {
     SiteSetup,
     PaginationComponent,
     QuizView,
+    Session,
+    QuizSession,
   },
   computed: {
     ...mapState({
       userDetails: (state) => state.userDetails.userDetails,
     }),
     tabNames() {
-      const userRoles = this.userDetails.user;
+      this.userRoles = this.userDetails.user;
       let tabs = ["Courses"]; // Always include 'Courses'
 
-      if (userRoles?.is_student) {
+      if (this.userRoles?.is_student) {
         tabs.push("Enrolled Courses", "Completed Courses", "Quiz Sessions");
       }
 
-      if (userRoles?.is_teacher) {
+      if (this.userRoles?.is_teacher) {
         tabs = [
           "Courses Statistics",
           "Created Courses",
@@ -294,7 +297,7 @@ export default {
         ];
       }
 
-      if (userRoles?.is_admin) {
+      if (this.userRoles?.is_admin) {
         tabs = [
           "User Management",
           "Website Management",
@@ -370,12 +373,12 @@ export default {
     setActiveClass(tabName) {
       this.activeClass = tabName;
     },
-    handleCourseEdit(course_slug) {
-      this.$router.push({
-        name: "CourseEditPage",
-        params: { courseSlug: course_slug },
-      });
-    },
+    // handleCourseEdit(course_slug) {
+    //   this.$router.push({
+    //     name: "CourseEditPage",
+    //     params: { courseSlug: course_slug },
+    //   });
+    // },
     paginate(items, currentPage) {
       if (!Array.isArray(items)) {
         console.error("Expected an array but got:", items);

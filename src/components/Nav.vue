@@ -26,6 +26,11 @@
 
         <a v-else href="/" class="navbar-item is-size-4">{{ siteSetup?.title }}</a>
       </template>
+      <div class="navbar-burger" data-target="navbar-item">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </div>
     <div class="navbar-menu" id="navbar-item">
       <div class="navbar-start">
@@ -100,6 +105,17 @@ export default {
       userDetails: (state) => state.userDetails.userDetails,
     }),
   },
+  mounted() {
+    const navbarBurger = document.querySelector(".navbar-burger");
+    const navbarMenu = document.querySelector("#navbar-item");
+
+    if (navbarBurger) {
+      navbarBurger.addEventListener("click", () => {
+        navbarBurger.classList.toggle("is-active");
+        navbarMenu.classList.toggle("is-active");
+      });
+    }
+  },
   methods: {
     async logout() {
       console.log("logout");
@@ -128,5 +144,57 @@ export default {
 <style scoped>
 .icon-spaced {
   margin-right: 8px;
+}
+.navbar-burger {
+  cursor: pointer;
+  display: block;
+  height: 3.25rem;
+  position: relative;
+  width: 3.25rem;
+}
+
+.navbar-burger span {
+  background-color: #333;
+  display: block;
+  height: 0.25rem;
+  left: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: background-color 0.2s ease-in-out;
+  width: 100%;
+}
+
+.navbar-burger span:nth-child(1) {
+  top: 30%;
+}
+
+.navbar-burger span:nth-child(3) {
+  top: 70%;
+}
+
+.navbar-burger:hover span {
+  background-color: #e6eaeb;
+}
+
+.navbar-menu {
+  display: none;
+}
+
+.navbar-menu.is-active {
+  background-color: hsla(221deg, 14%, 29%, 1); /* or any other color you want */
+  padding: 1rem;
+  position: absolute;
+  top: 100%;
+  width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+  .navbar-menu {
+    background-color: hsla(221deg, 14%, 29%, 1);
+    position: absolute;
+    top: 100%;
+    width: 100%;
+  }
 }
 </style>
